@@ -1,0 +1,7 @@
+name: ThePitAddon
+main: cn.mooncookie.kbffa.KnockBackFFA
+version: 1.0
+author: YukiEnd
+
+commands:
+  nextmap:
