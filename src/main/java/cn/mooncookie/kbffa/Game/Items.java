@@ -26,21 +26,32 @@ public class Items {
         BowItem.setItemMeta(BowItemMeta);
         p.getInventory().setItem(2, BowItem);
 
-        ItemStack JumpPad = new ItemStack(Material.GOLD_PLATE, 1);
-        ItemMeta JumpPadMeta = JumpPad.getItemMeta();
-        JumpPadMeta.setDisplayName("§6击退棒");
-        JumpPadMeta.spigot().setUnbreakable(true);
-        JumpPad.setItemMeta(BowItemMeta);
-        p.getInventory().setItem(4, JumpPad);
+        giveJumpPad(p);
 
         ItemStack SpeedItem = new ItemStack(Material.FEATHER, 1);
         ItemMeta SpeedItemMeta = SpeedItem.getItemMeta();
-        SpeedItemMeta.setDisplayName("§b加速");
-        JumpPadMeta.spigot().setUnbreakable(true);
-        JumpPad.setItemMeta(BowItemMeta);
-        p.getInventory().setItem(7, JumpPad);
+        SpeedItemMeta.setDisplayName("§b§l加速");
+        SpeedItemMeta.spigot().setUnbreakable(true);
+        SpeedItem.setItemMeta(BowItemMeta);
+        p.getInventory().setItem(7, SpeedItem);
 
-        ItemStack EnderPeral = new ItemStack(Material.ENDER_PEARL, 8);
-        p.getInventory().setItem(7, EnderPeral);
+        giveEnderPearl(p);
+
+        ItemStack Arrows = new ItemStack(Material.ARROW, 64);
+        p.getInventory().setItem(17, Arrows);
+    }
+
+    public static void giveJumpPad(Player p) {
+        ItemStack JumpPad = new ItemStack(Material.GOLD_PLATE, 1);
+        ItemMeta JumpPadMeta = JumpPad.getItemMeta();
+        JumpPadMeta.setDisplayName("§e§l跳板");
+        JumpPadMeta.spigot().setUnbreakable(true);
+        JumpPad.setItemMeta(JumpPadMeta);
+        p.getInventory().setItem(4, JumpPad);
+    }
+
+    public static void giveEnderPearl(Player p) {
+        ItemStack EnderPeral = new ItemStack(Material.ENDER_PEARL, 1);
+        p.getInventory().setItem(8, EnderPeral);
     }
 }

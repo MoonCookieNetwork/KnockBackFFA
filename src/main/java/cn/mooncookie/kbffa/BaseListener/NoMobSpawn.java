@@ -9,6 +9,5 @@ public class NoMobSpawn implements Listener {
     @EventHandler
     public void onEntitySpawn(CreatureSpawnEvent e) {
         e.setCancelled(true);
-
     }
 }

@@ -1,23 +1,31 @@
 package cn.mooncookie.kbffa;
 
-
-import cn.mooncookie.kbffa.Game.Maps.MapManager;
+import cn.mooncookie.kbffa.BaseListener.BlockProtect;
+import cn.mooncookie.kbffa.BaseListener.ChatFormat;
+import cn.mooncookie.kbffa.BaseListener.NoMobSpawn;
+import cn.mooncookie.kbffa.BaseListener.StopWeatherChange;
+import cn.mooncookie.kbffa.Game.Listener.DamageListener;
+import cn.mooncookie.kbffa.Game.Listener.ItemsListener;
+import cn.mooncookie.kbffa.Game.Listener.PlayerJoinLeave;
+import cn.mooncookie.kbffa.Game.Listener.PlayerKillDeathListener;
+import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
+import cn.mooncookie.kbffa.ScoreBoard.RefreshScoreBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
-public class KnockBackFFA extends JavaPlugin implements org.bukkit.event.Listener {
+//你说得对，我懒得建Repo，下次一定。
+
+public class KnockBackFFA extends JavaPlugin implements Listener {
+
+    public static File playerDataFile;
     private static KnockBackFFA instance;
-    private final Map<UUID, Boolean> CanTrade = new HashMap<>();
-    private final Map<UUID, Boolean> CanEnderChest = new HashMap<>();
-    private File dataFolder;
-    private YamlConfiguration config;
 
     public static KnockBackFFA getInstance() {
         return instance;
@@ -26,17 +34,39 @@ public class KnockBackFFA extends JavaPlugin implements org.bukkit.event.Listene
     @Override
     public void onEnable() {
         instance = this;
+        World defaultWorld = Bukkit.getWorld("Shield");
+        if (defaultWorld != null) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.teleport(defaultWorld.getSpawnLocation());
+            }
+            MapChangeListener.MapName = defaultWorld.getName();
+            MapChangeListener.currentMapIndex = MapChangeListener.worldNames.indexOf(MapChangeListener.MapName);
+        }
+        playerDataFile = new File(getDataFolder(), "playerdata.yml");
+        PlayerKillDeathListener playerKillDeathListener = new PlayerKillDeathListener(playerDataFile);
+        getServer().getPluginManager().registerEvents(playerKillDeathListener, this);
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         getLogger().info(ChatColor.GREEN + "插件已启用");
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
-        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        MapManager.mapLoader();
-        MapManager.mapLoader();
-        dataFolder = getDataFolder();
+        new RefreshScoreBoard(this).runTaskTimer(this, 0, 20);
+        getServer().getPluginManager().registerEvents(new MapChangeListener(this), this);
+        getCommand("nextmap").setExecutor(new MapChangeListener(this));
+        getServer().getPluginManager().registerEvents(new ChatFormat(), this);
+        getServer().getPluginManager().registerEvents(new DamageListener(), this);
+        getServer().getPluginManager().registerEvents(new ItemsListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinLeave(), this);
+        getServer().getPluginManager().registerEvents(new BlockProtect(), this);
+        getServer().getPluginManager().registerEvents(new NoMobSpawn(), this);
+        getServer().getPluginManager().registerEvents(new StopWeatherChange(), this);
+        File dataFolder = getDataFolder();
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
         }
-        config = new YamlConfiguration();
+        new YamlConfiguration();
+        if (!playerDataFile.exists()) {
+            saveResource("playerdata.yml", false);
+        }
+        YamlConfiguration.loadConfiguration(playerDataFile);
     }
 
     @Override
@@ -45,5 +75,6 @@ public class KnockBackFFA extends JavaPlugin implements org.bukkit.event.Listene
         getLogger().info(ChatColor.GREEN + "插件已关闭");
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
     }
+
 }
 

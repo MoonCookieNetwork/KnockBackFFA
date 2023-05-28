@@ -1,6 +1,7 @@
 package cn.mooncookie.kbffa.ScoreBoard;
 
-import cn.mooncookie.kbffa.Game.Maps.MapManager;
+import cn.mooncookie.kbffa.Game.Listener.PlayerKillDeathListener;
+import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -13,11 +14,13 @@ import java.util.List;
 
 
 public class ScoreBoard {
+
     private static String getDate() {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd §8HH:mm");
         return format.format(date);
     }
+
     public static void updateScoreboard(Player player) {
         Scoreboard scoreboard = new Scoreboard();
         ScoreboardObjective objective = scoreboard.registerObjective("KBFFA", IScoreboardCriteria.b);
@@ -27,16 +30,18 @@ public class ScoreBoard {
         PacketPlayOutScoreboardDisplayObjective displayObjective = new PacketPlayOutScoreboardDisplayObjective(1, objective);
         List<PacketPlayOutScoreboardScore> scores = new ArrayList<>();
 
-        scores.add(getScorePacket(scoreboard, objective, "   ", 9));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f击杀数：§a"), 8));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f死亡数：§c"), 7));
+        scores.add(getScorePacket(scoreboard, objective, "   ", 10));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f击杀数：§a" + PlayerKillDeathListener.kills.get(player)), 9));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f死亡数：§c" + PlayerKillDeathListener.deaths.get(player)), 8));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f积分数：§6" + PlayerKillDeathListener.points.get(player)), 7));
+
         scores.add(getScorePacket(scoreboard, objective, ("  "), 6));
         scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r切换地图：§a{gametime}"), 5));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r当前地图：§a" + MapManager.MapName), 4));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r在线人数：§a" + Bukkit.getOnlinePlayers().size()), 4));
-        scores.add(getScorePacket(scoreboard, objective, (" "), 3));
-        scores.add(getScorePacket(scoreboard, objective, ("§7#" + ScoreBoard.getDate()), 2));
-        scores.add(getScorePacket(scoreboard, objective, ("§emc.mooncookie.top"), 1));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r当前地图：§a" + MapChangeListener.MapName), 4));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r在线人数：§a" + Bukkit.getOnlinePlayers().size()), 3));
+        scores.add(getScorePacket(scoreboard, objective, (" "), 2));
+        scores.add(getScorePacket(scoreboard, objective, ("§7#" + ScoreBoard.getDate()), 1));
+        scores.add(getScorePacket(scoreboard, objective, ("§emc.mooncookie.top"), 0));
         PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
         connection.sendPacket(removeObjective);
         connection.sendPacket(createObjective);
