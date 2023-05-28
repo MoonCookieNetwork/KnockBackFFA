@@ -16,6 +16,10 @@ public class DamageListener implements Listener {
         if (!(e.getEntity() instanceof Player)) return;
         Player player = (Player) e.getEntity();
 
+        if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            e.setDamage(0);
+            return;
+        }
         if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
             player.closeInventory();
             PlayerDeathEvent deathEvent = new PlayerDeathEvent(player, null, 0, null);

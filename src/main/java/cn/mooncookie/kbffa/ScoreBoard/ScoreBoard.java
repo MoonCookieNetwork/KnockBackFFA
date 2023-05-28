@@ -36,19 +36,18 @@ public class ScoreBoard {
         scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f积分数：§6" + PlayerKillDeathListener.points.get(player)), 7));
 
         scores.add(getScorePacket(scoreboard, objective, ("  "), 6));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r切换地图：§a{gametime}"), 5));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r切换地图：§a" + (MapChangeListener.countdown / 20)), 5));
         scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r当前地图：§a" + MapChangeListener.MapName), 4));
         scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r在线人数：§a" + Bukkit.getOnlinePlayers().size()), 3));
         scores.add(getScorePacket(scoreboard, objective, (" "), 2));
         scores.add(getScorePacket(scoreboard, objective, ("§7#" + ScoreBoard.getDate()), 1));
         scores.add(getScorePacket(scoreboard, objective, ("§emc.mooncookie.top"), 0));
-        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-        connection.sendPacket(removeObjective);
-        connection.sendPacket(createObjective);
-        connection.sendPacket(displayObjective);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(removeObjective);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(createObjective);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(displayObjective);
 
         for (PacketPlayOutScoreboardScore packets : scores) {
-            connection.sendPacket(packets);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packets);
         }
     }
 

@@ -4,10 +4,7 @@ import cn.mooncookie.kbffa.BaseListener.BlockProtect;
 import cn.mooncookie.kbffa.BaseListener.ChatFormat;
 import cn.mooncookie.kbffa.BaseListener.NoMobSpawn;
 import cn.mooncookie.kbffa.BaseListener.StopWeatherChange;
-import cn.mooncookie.kbffa.Game.Listener.DamageListener;
-import cn.mooncookie.kbffa.Game.Listener.ItemsListener;
-import cn.mooncookie.kbffa.Game.Listener.PlayerJoinLeave;
-import cn.mooncookie.kbffa.Game.Listener.PlayerKillDeathListener;
+import cn.mooncookie.kbffa.Game.Listener.*;
 import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
 import cn.mooncookie.kbffa.ScoreBoard.RefreshScoreBoard;
 import org.bukkit.Bukkit;
@@ -23,7 +20,7 @@ import java.io.File;
 //你说得对，我懒得建Repo，下次一定。
 
 public class KnockBackFFA extends JavaPlugin implements Listener {
-
+    private BlockClearListener Clearlistener;
     public static File playerDataFile;
     private static KnockBackFFA instance;
 
@@ -34,6 +31,7 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+        Clearlistener = new BlockClearListener();
         World defaultWorld = Bukkit.getWorld("Shield");
         if (defaultWorld != null) {
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -44,11 +42,13 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
         }
         playerDataFile = new File(getDataFolder(), "playerdata.yml");
         PlayerKillDeathListener playerKillDeathListener = new PlayerKillDeathListener(playerDataFile);
+        getServer().getPluginManager().registerEvents(Clearlistener,this);
         getServer().getPluginManager().registerEvents(playerKillDeathListener, this);
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         getLogger().info(ChatColor.GREEN + "插件已启用");
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         new RefreshScoreBoard(this).runTaskTimer(this, 0, 20);
+        getServer().getPluginManager().registerEvents(new BlockClearListener(),this);
         getServer().getPluginManager().registerEvents(new MapChangeListener(this), this);
         getCommand("nextmap").setExecutor(new MapChangeListener(this));
         getServer().getPluginManager().registerEvents(new ChatFormat(), this);
@@ -71,6 +71,7 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        Clearlistener.clearBlocks();
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         getLogger().info(ChatColor.GREEN + "插件已关闭");
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
