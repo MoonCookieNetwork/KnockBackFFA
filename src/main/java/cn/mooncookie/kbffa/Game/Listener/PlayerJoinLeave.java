@@ -1,12 +1,10 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
 import cn.mooncookie.kbffa.Game.GenShinImpact;
-import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
 import cn.mooncookie.kbffa.KnockBackFFA;
 import cn.mooncookie.kbffa.LPRankProvider;
 import cn.mooncookie.kbffa.ScoreBoard.ScoreBoard;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -15,7 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import static cn.mooncookie.kbffa.Game.Maps.MapChangeListener.*;
+import static cn.mooncookie.kbffa.Game.Maps.MapChangeListener.countdown;
 
 
 public class PlayerJoinLeave implements Listener {

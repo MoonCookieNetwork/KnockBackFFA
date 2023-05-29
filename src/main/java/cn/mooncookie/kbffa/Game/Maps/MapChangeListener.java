@@ -2,14 +2,12 @@ package cn.mooncookie.kbffa.Game.Maps;
 
 import cn.mooncookie.kbffa.Game.GenShinImpact;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,13 +18,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /***********************
  *   @Author: Rain
@@ -35,15 +29,15 @@ import java.util.List;
  */
 public class MapChangeListener implements Listener, CommandExecutor {
 
-    private final JavaPlugin plugin;
     public static int countdown = 0;
     public static GenShinImpact currentMap;
+    private final JavaPlugin plugin;
 
     public MapChangeListener(JavaPlugin plugin) {
         this.plugin = plugin;
-        Bukkit.getScheduler().runTaskLater(plugin , this::init , 20);
+        Bukkit.getScheduler().runTaskLater(plugin, this::init, 20);
 
-        plugin.getServer().getPluginManager().registerEvents(this , plugin);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     private void init() {
@@ -60,16 +54,16 @@ public class MapChangeListener implements Listener, CommandExecutor {
     }
 
     private void loadCurrentMap() {
-        File file = new File(plugin.getDataFolder() , "config.yml");
+        File file = new File(plugin.getDataFolder(), "config.yml");
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-        String name = yaml.getString("current_map" , GenShinImpact.SHIELD.name());
+        String name = yaml.getString("current_map", GenShinImpact.SHIELD.name());
         currentMap = GenShinImpact.valueOf(name.toUpperCase());
     }
 
     private void saveCurrentMap() {
-        File file = new File(plugin.getDataFolder() , "config.yml");
+        File file = new File(plugin.getDataFolder(), "config.yml");
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-        yaml.set("current_map" , currentMap.getName());
+        yaml.set("current_map", currentMap.getName());
         try {
             yaml.save(file);
         } catch (IOException e) {
@@ -79,12 +73,12 @@ public class MapChangeListener implements Listener, CommandExecutor {
 
     private void startCountdown() {
         countdown = currentMap.getDuration();
-        Bukkit.getScheduler().runTaskTimer(plugin , () -> {
+        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             countdown--;
             if (countdown <= 0) {
                 changeMap();
             }
-        } , 20L , 20L);
+        }, 20L, 20L);
     }
 
     private void changeMap() {
@@ -92,7 +86,7 @@ public class MapChangeListener implements Listener, CommandExecutor {
         saveCurrentMap();
         for (Player player : Bukkit.getOnlinePlayers()) {
             currentMap.teleport(player);
-            player.sendMessage("地图已切换到: " + currentMap.getName());
+            player.sendMessage("§a地图已切换至：" + MapChangeListener.currentMap.getDisplayName() + "。");
         }
         countdown = currentMap.getDuration();
     }
@@ -101,14 +95,14 @@ public class MapChangeListener implements Listener, CommandExecutor {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         currentMap.teleport(player);
-        currentMap.giveItems(player);
+        GenShinImpact.giveItems(player);
     }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         currentMap.teleport(player);
-        currentMap.giveItems(player);
+        GenShinImpact.giveItems(player);
     }
 
     @EventHandler
@@ -127,13 +121,13 @@ public class MapChangeListener implements Listener, CommandExecutor {
             saveCurrentMap();
             for (Player p : Bukkit.getOnlinePlayers()) {
                 currentMap.teleport(p);
-                p.sendMessage("地图已切换到： " + currentMap.getName());
+                p.sendMessage("§a地图已切换至：" + MapChangeListener.currentMap.getDisplayName() + "。");
                 countdown = currentMap.getDuration();
             }
         }
     }
 
-    public boolean onCommand(CommandSender sender , Command cmd , String label , String[] args) {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("changemap")) {
             Player player = (Player) sender;
             player.openInventory(getMapsInventory());
@@ -143,7 +137,7 @@ public class MapChangeListener implements Listener, CommandExecutor {
     }
 
     private Inventory getMapsInventory() {
-        Inventory gui = Bukkit.createInventory(null , 27 , "更换地图");
+        Inventory gui = Bukkit.createInventory(null, 27, "更换地图");
         for (GenShinImpact map : GenShinImpact.values()) {
             ItemStack worldButton = new ItemStack(Material.PAPER);
             ItemMeta meta = worldButton.getItemMeta();

@@ -1,10 +1,6 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
-/***********************
- *   @Author: Rain
- *   @Date: 2023/5/29
- * **********************
- */
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BlockClearListener implements Listener {
-    private Map<String, List<Block>> playerBlocks = new HashMap<>();
+    private final Map<String, List<Block>> playerBlocks = new HashMap<>();
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {

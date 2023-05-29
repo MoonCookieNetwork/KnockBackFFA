@@ -6,11 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
-/***********************
- *   @Author: Rain
- *   @Date: 2023/5/29
- * **********************
- */
+
 public class PlayerListener implements Listener {
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {

@@ -2,6 +2,7 @@ package cn.mooncookie.kbffa.Game.Listener;
 
 import cn.mooncookie.kbffa.Game.GenShinImpact;
 import cn.mooncookie.kbffa.KnockBackFFA;
+import cn.mooncookie.kbffa.LPRankProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -57,6 +58,7 @@ public class PlayerKillDeathListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (event.getEntity() != null) {
             Player victim = event.getEntity();
+            Player killer = event.getEntity().getKiller();
 
             victim.setHealth(20);
             victim.setFoodLevel(20);
@@ -68,6 +70,7 @@ public class PlayerKillDeathListener implements Listener {
             deaths.put(victim, deathCount);
             savePlayerData(victim);
             Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> victim.spigot().respawn(), 1);
+            event.setDeathMessage(LPRankProvider.getPrefixColor(victim) + victim.getDisplayName() + " 被击杀， 击杀者： " + LPRankProvider.getPrefixColor(killer) + killer.getDisplayName());
         }
     }
 

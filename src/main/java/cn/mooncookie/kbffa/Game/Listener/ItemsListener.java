@@ -3,15 +3,11 @@ package cn.mooncookie.kbffa.Game.Listener;
 import cn.mooncookie.kbffa.Game.GenShinImpact;
 import cn.mooncookie.kbffa.KnockBackFFA;
 import org.bukkit.*;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
@@ -23,22 +19,27 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ItemsListener implements Listener {
     private final int featherCd = 10;
     private final int jumpPadCd = 10;
     private final int bowCd = 10;
 
     @EventHandler
-    public void onRightClick(PlayerInteractEvent e) {
+    public void onClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR))
             return;
         ItemStack i = e.getItem();
         if (e.getItem() == null)
             return;
+        if (i.getType() == Material.BLAZE_ROD && e.getAction() == Action.LEFT_CLICK_AIR || i.getType() == Material.BLAZE_ROD && e.getAction() == Action.LEFT_CLICK_BLOCK) {
+            e.setCancelled(true);
+            player.setVelocity(player.getLocation().getDirection().multiply(30.5).setY(30.5));
+            player.playSound(player.getLocation(), Sound.FIRE_IGNITE, 1, 1);
+            player.damage(0);
+            player.sendMessage("TROLLLLLLLLLLLLLLLLLLLLLL");
+            return;
+        }
         if (i.getType() == Material.FEATHER) {
             long lastFeatherTime = 0;
             for (MetadataValue meta : player.getMetadata("lastFeatherTime")) {
@@ -69,9 +70,10 @@ public class ItemsListener implements Listener {
             if (player.getInventory().contains(Material.ARROW) && (lastBowTime == 0 || System.currentTimeMillis() - lastBowTime >= bowCd * 1000L)) {
                 player.setMetadata("lastBowTime",
                         new FixedMetadataValue(KnockBackFFA.getInstance(), System.currentTimeMillis()));
-               final ItemStack bowItem = i.clone();
+                final ItemStack bowItem = i.clone();
                 new BukkitRunnable() {
                     int playedTicks = 0;
+
                     @Override
                     public void run() {
                         playedTicks += 20;
@@ -79,11 +81,11 @@ public class ItemsListener implements Listener {
                             Inventory inventory = player.getInventory();
                             int bowSlot = inventory.first(Material.BOW);
                             if (bowSlot >= 0) {
-                                ItemStack bowArrow = bowItem.clone();;
-                                ItemMeta itemMeta = bowArrow.getItemMeta() ;
-                               itemMeta.setDisplayName(bowItem.getItemMeta().getDisplayName());
+                                ItemStack bowArrow = bowItem.clone();
+                                ItemMeta itemMeta = bowArrow.getItemMeta();
+                                itemMeta.setDisplayName(bowItem.getItemMeta().getDisplayName());
                                 bowArrow.setItemMeta(itemMeta);
-                                inventory.setItem(bowSlot , bowArrow);
+                                inventory.setItem(bowSlot, bowArrow);
                             }
                             cancel();
                             return;
@@ -92,17 +94,17 @@ public class ItemsListener implements Listener {
                         if (bowSlot >= 0) {
                             ItemStack bowArrow = bowItem.clone();
                             ItemMeta itemMeta = bowArrow.getItemMeta();
-                            itemMeta.setDisplayName("§c" + Integer.toString((bowCd * 20 - playedTicks) / 20));
+                            itemMeta.setDisplayName("§c" + (bowCd * 20 - playedTicks) / 20);
                             bowArrow.setItemMeta(itemMeta);
-                            player.getInventory().setItem(bowSlot , bowArrow);
+                            player.getInventory().setItem(bowSlot, bowArrow);
                         } else {
                             cancel();
                         }
                     }
                 }.runTaskTimer(KnockBackFFA.getInstance(), 20L, 20L);
             }
-            }
         }
+    }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
@@ -141,8 +143,7 @@ public class ItemsListener implements Listener {
         if (location.getBlock().getType() == Material.GOLD_PLATE) {
             player.setVelocity(location.getDirection().multiply(1.5).setY(1.5));
             player.playSound(location, Sound.PISTON_EXTEND, 1, 1);
-            player.damage(0.01);
+            player.damage(0);
         }
-
     }
 }
