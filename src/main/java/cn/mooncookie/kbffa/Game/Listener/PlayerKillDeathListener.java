@@ -1,6 +1,6 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
-import cn.mooncookie.kbffa.Game.Items;
+import cn.mooncookie.kbffa.Game.GenShinImpact;
 import cn.mooncookie.kbffa.KnockBackFFA;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -48,7 +48,7 @@ public class PlayerKillDeathListener implements Listener {
             kills.put(killer, killCount);
             int pointsCount = points.getOrDefault(killer, 0) + 5;
             points.put(killer, pointsCount);
-            Items.giveEnderPearl(killer);
+            GenShinImpact.giveEnderPearl(killer);
             savePlayerData(killer);
         }
     }
@@ -61,7 +61,7 @@ public class PlayerKillDeathListener implements Listener {
             victim.setHealth(20);
             victim.setFoodLevel(20);
             victim.getInventory().clear();
-            Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> Items.giveItem(victim), 1);
+            Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> GenShinImpact.giveItems(victim), 1);
             victim.removePotionEffect(PotionEffectType.SPEED);
 
             int deathCount = deaths.getOrDefault(victim, 0) + 1;

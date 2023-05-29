@@ -1,6 +1,6 @@
 package cn.mooncookie.kbffa.Game.Maps;
 
-import cn.mooncookie.kbffa.Game.Items;
+import cn.mooncookie.kbffa.Game.GenShinImpact;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,108 +33,82 @@ import java.util.List;
  *   @Date: 2023/5/24
  * **********************
  */
-
-public class MapChangeListener implements CommandExecutor, Listener {
+public class MapChangeListener implements Listener, CommandExecutor {
 
     private final JavaPlugin plugin;
-    public static final List<String> worldNames = new ArrayList<>();
-    public static int currentMapIndex = 0;
-    public static String mapName;
-    public static int countdown = 114514;
+    public static int countdown = 0;
+    public static GenShinImpact currentMap;
 
     public MapChangeListener(JavaPlugin plugin) {
         this.plugin = plugin;
-        Collections.addAll(worldNames, "Shield", "Garden", "RedDeath", "Desert", "Woods", "Lime", "Nether", "Colors", "Prismarine", "Beach", "Clay", "Sanic", "Savanna", "Chess");
+        Bukkit.getScheduler().runTaskLater(plugin , this::init , 20);
 
-        if (!new File(plugin.getDataFolder(), "mapdata.yml").exists()) {
-            saveMapData();
-        }
-        loadMapData();
+        plugin.getServer().getPluginManager().registerEvents(this , plugin);
+    }
 
-        World defaultWorld = Bukkit.getWorld(worldNames.get(currentMapIndex));
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Location newSpawn = defaultWorld.getSpawnLocation();
-            player.teleport(newSpawn);
-            mapName = defaultWorld.getName();
-            player.sendMessage("地图已切换到: " + mapName);
-        }
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                changeMap();
+    private void init() {
+        for (GenShinImpact map : GenShinImpact.values()) {
+            World world = Bukkit.getWorld(map.getName());
+            if (world == null) {
+                continue;
             }
-        }.runTaskTimer(plugin, 0L, 10L);
-
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+            map.setWorld(world);
+            map.initSpawnLocation();
+        }
+        loadCurrentMap();
+        startCountdown();
     }
 
-    private void loadMapData() {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "mapdata.yml"));
-        if (config.contains("currentMapIndex")) {
-            currentMapIndex = config.getInt("currentMapIndex");
-        }
-        if (config.contains("mapName")) {
-            mapName = config.getString("mapName");
-        }
-        if (config.contains("countdown")) {
-            countdown = config.getInt("countdown");
-        }
+    private void loadCurrentMap() {
+        File file = new File(plugin.getDataFolder() , "config.yml");
+        YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+        String name = yaml.getString("current_map" , GenShinImpact.SHIELD.name());
+        currentMap = GenShinImpact.valueOf(name.toUpperCase());
     }
 
-    public void saveMapData() {
-        YamlConfiguration config = new YamlConfiguration();
-        config.set("currentMapIndex", currentMapIndex);
-        config.set("mapName", mapName);
-        config.set("countdown", countdown);
+    private void saveCurrentMap() {
+        File file = new File(plugin.getDataFolder() , "config.yml");
+        YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+        yaml.set("current_map" , currentMap.getName());
         try {
-            config.save(new File(plugin.getDataFolder(), "mapdata.yml"));
+            yaml.save(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void nextMap() {
-        currentMapIndex = (currentMapIndex + 1) % worldNames.size();
-        World nextWorld = Bukkit.getWorld(worldNames.get(currentMapIndex));
-        if (nextWorld.getName().equals("Shield")) {
-            currentMapIndex = (currentMapIndex + 1) % worldNames.size();
-            nextWorld = Bukkit.getWorld(worldNames.get(currentMapIndex));
-        }
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Location newSpawn = nextWorld.getSpawnLocation();
-            player.teleport(newSpawn);
-            mapName = nextWorld.getName();
-            player.sendMessage("地图已切换到: " + mapName);
-        }
-        saveMapData();
+    private void startCountdown() {
+        countdown = currentMap.getDuration();
+        Bukkit.getScheduler().runTaskTimer(plugin , () -> {
+            countdown--;
+            if (countdown <= 0) {
+                changeMap();
+            }
+        } , 20L , 20L);
     }
 
     private void changeMap() {
-        countdown--;
-        if (countdown == 0) {
-            nextMap();
-            countdown = 114514;
+        currentMap = currentMap.getNext();
+        saveCurrentMap();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            currentMap.teleport(player);
+            player.sendMessage("地图已切换到: " + currentMap.getName());
         }
-        saveMapData();
+        countdown = currentMap.getDuration();
     }
 
-    private void openChangeMapGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(player, 27, "更换地图");
-        for (String worldName : worldNames) {
-            ItemStack worldButton = new ItemStack(Material.PAPER);
-            ItemMeta meta = worldButton.getItemMeta();
-            meta.addEnchant(Enchantment.KNOCKBACK,10,true);
-            meta.setDisplayName(worldName);
-            worldButton.setItemMeta(meta);
-            gui.addItem(worldButton);
-        }
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        currentMap.teleport(player);
+        currentMap.giveItems(player);
+    }
 
-        ItemStack currentMapButton = new ItemStack(Material.MAP);
-        ItemMeta meta = currentMapButton.getItemMeta();
-        meta.setDisplayName("当前地图：" + mapName);
-        currentMapButton.setItemMeta(meta);
-        gui.setItem(18, currentMapButton);
-        player.openInventory(gui);
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        currentMap.teleport(player);
+        currentMap.giveItems(player);
     }
 
     @EventHandler
@@ -147,57 +121,37 @@ public class MapChangeListener implements CommandExecutor, Listener {
             return;
         }
         Player player = (Player) event.getWhoClicked();
-        World nextWorld = Bukkit.getWorld(event.getCurrentItem().getItemMeta().getDisplayName());
-        if (nextWorld != null && !nextWorld.getName().equals(mapName)) {
-            mapName = nextWorld.getName();
+        GenShinImpact map = GenShinImpact.getByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
+        if (map != null && map != currentMap) {
+            currentMap = map;
+            saveCurrentMap();
             for (Player p : Bukkit.getOnlinePlayers()) {
-                Location newSpawn = nextWorld.getSpawnLocation();
-                p.teleport(newSpawn);
-                p.sendMessage("地图已切换到： " + mapName);
+                currentMap.teleport(p);
+                p.sendMessage("地图已切换到： " + currentMap.getName());
+                countdown = currentMap.getDuration();
             }
-            saveMapData();
         }
-        ItemStack currentMapButton = new ItemStack(Material.MAP);
-        ItemMeta meta = currentMapButton.getItemMeta();
-        meta.setDisplayName("当前地图：" + mapName);
-        currentMapButton.setItemMeta(meta);
-        event.getInventory().setItem(18, currentMapButton);
     }
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        World currentWorld = Bukkit.getWorld(mapName);
-        Location spawnLocation = currentWorld.getSpawnLocation();
-        player.teleport(spawnLocation);
-        player.getInventory().clear();
-        Items.giveItem(player);
-        saveMapData();
-    }
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent event) {
-       Player player = event.getPlayer();
-       World currentWorld = Bukkit.getWorld(mapName);
-       Location spawnLocation = currentWorld.getSpawnLocation();
-       event.setRespawnLocation(spawnLocation);
-       player.getInventory().clear();
-       Items.giveItem(player);
-       saveMapData();
-    }
-
-
-    public boolean onCommand(CommandSender sender, Command cmd, String s , String[] strings) {
-        if (!sender.hasPermission("KnockBackFFA.Command.NextMap")) {
-            sender.sendMessage("§c你没有使用此命令的权限！");
+    public boolean onCommand(CommandSender sender , Command cmd , String label , String[] args) {
+        if (cmd.getName().equalsIgnoreCase("changemap")) {
+            Player player = (Player) sender;
+            player.openInventory(getMapsInventory());
             return true;
         }
-        Player player = (Player) sender;
-        if (cmd.getName().equalsIgnoreCase("nextmap")) {
-            nextMap();
-        }
-        else if (cmd.getName().equalsIgnoreCase("changemap")) {
-            openChangeMapGUI(player);
-        }
-        return true;
+        return false;
     }
+
+    private Inventory getMapsInventory() {
+        Inventory gui = Bukkit.createInventory(null , 27 , "更换地图");
+        for (GenShinImpact map : GenShinImpact.values()) {
+            ItemStack worldButton = new ItemStack(Material.PAPER);
+            ItemMeta meta = worldButton.getItemMeta();
+            meta.setDisplayName(map.getDisplayName());
+            worldButton.setItemMeta(meta);
+            gui.addItem(worldButton);
+        }
+        return gui;
+    }
+
 }

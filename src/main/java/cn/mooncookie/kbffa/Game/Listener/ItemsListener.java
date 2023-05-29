@@ -1,6 +1,6 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
-import cn.mooncookie.kbffa.Game.Items;
+import cn.mooncookie.kbffa.Game.GenShinImpact;
 import cn.mooncookie.kbffa.KnockBackFFA;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -119,7 +119,7 @@ public class ItemsListener implements Listener {
             long currentTime = System.currentTimeMillis();
             if (lastJumpPadTime == 0 || currentTime - lastJumpPadTime >= jumpPadCd * 1000L) {
                 player.setMetadata("lastJumpPadTime", new FixedMetadataValue(KnockBackFFA.getInstance(), System.currentTimeMillis()));
-                Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> Items.giveJumpPad(player), 1);
+                Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> GenShinImpact.giveJumpPad(player), 1);
                 Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.AIR), 5 * 20);
             } else {
                 player.sendMessage("§c请在" + (jumpPadCd - (currentTime - lastJumpPadTime) / 1000L) + "秒后再使用！");

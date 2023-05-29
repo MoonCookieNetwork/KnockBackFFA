@@ -67,11 +67,9 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         Clearlistener.clearBlocks();
-        mapChangeListener.saveMapData();
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         getLogger().info(ChatColor.GREEN + "插件已关闭");
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
     }
-
 }
 
