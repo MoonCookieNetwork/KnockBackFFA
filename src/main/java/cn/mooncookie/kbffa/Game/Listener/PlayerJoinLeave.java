@@ -15,6 +15,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import static cn.mooncookie.kbffa.Game.Maps.MapChangeListener.currentMapIndex;
+import static cn.mooncookie.kbffa.Game.Maps.MapChangeListener.worldNames;
+
 
 public class PlayerJoinLeave implements Listener {
 
@@ -24,7 +26,7 @@ public class PlayerJoinLeave implements Listener {
 
         ScoreBoard.updateScoreboard(player);
 
-        World currentWorld = Bukkit.getWorld(MapChangeListener.worldNames.get(currentMapIndex));
+        World currentWorld = Bukkit.getWorld(worldNames.get(currentMapIndex));
         Location spawnLocation = currentWorld.getSpawnLocation();
         player.teleport(spawnLocation);
 

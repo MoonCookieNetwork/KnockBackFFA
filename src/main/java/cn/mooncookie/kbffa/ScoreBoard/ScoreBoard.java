@@ -37,7 +37,7 @@ public class ScoreBoard {
 
         scores.add(getScorePacket(scoreboard, objective, ("  "), 6));
         scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r切换地图：§a" + (MapChangeListener.countdown / 20)), 5));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r当前地图：§a" + MapChangeListener.MapName), 4));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r当前地图：§a" + MapChangeListener.mapName), 4));
         scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r在线人数：§a" + Bukkit.getOnlinePlayers().size()), 3));
         scores.add(getScorePacket(scoreboard, objective, (" "), 2));
         scores.add(getScorePacket(scoreboard, objective, ("§7#" + ScoreBoard.getDate()), 1));
