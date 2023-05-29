@@ -27,8 +27,6 @@ public class ItemsListener implements Listener {
     @EventHandler
     public void onClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR))
-            return;
         ItemStack i = e.getItem();
         if (e.getItem() == null)
             return;
@@ -40,6 +38,8 @@ public class ItemsListener implements Listener {
             player.sendMessage("TROLLLLLLLLLLLLLLLLLLLLLL");
             return;
         }
+        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR))
+            return;
         if (i.getType() == Material.FEATHER) {
             long lastFeatherTime = 0;
             for (MetadataValue meta : player.getMetadata("lastFeatherTime")) {

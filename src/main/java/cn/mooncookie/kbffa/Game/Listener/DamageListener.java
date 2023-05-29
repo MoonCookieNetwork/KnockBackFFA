@@ -3,7 +3,6 @@ package cn.mooncookie.kbffa.Game.Listener;
 import cn.mooncookie.kbffa.KnockBackFFA;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +17,10 @@ public class DamageListener implements Listener {
         if (!(e.getEntity() instanceof Player)) return;
         Player player = (Player) e.getEntity();
 
+        if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            e.setDamage(0);
+            return;
+        }
 
         if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
             player.closeInventory();
