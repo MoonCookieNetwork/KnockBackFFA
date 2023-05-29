@@ -22,6 +22,7 @@ public class Items {
 
         ItemStack BowItem = new ItemStack(Material.BOW, 1);
         ItemMeta BowItemMeta = BowItem.getItemMeta();
+        BowItemMeta.setDisplayName("§d§lSakura");
         BowItemMeta.spigot().setUnbreakable(true);
         BowItem.setItemMeta(BowItemMeta);
         p.getInventory().setItem(2, BowItem);
@@ -32,7 +33,7 @@ public class Items {
         ItemMeta SpeedItemMeta = SpeedItem.getItemMeta();
         SpeedItemMeta.setDisplayName("§b§l加速");
         SpeedItemMeta.spigot().setUnbreakable(true);
-        SpeedItem.setItemMeta(BowItemMeta);
+        SpeedItem.setItemMeta(SpeedItemMeta);
         p.getInventory().setItem(7, SpeedItem);
 
         giveEnderPearl(p);

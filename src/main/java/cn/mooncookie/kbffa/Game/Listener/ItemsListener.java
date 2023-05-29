@@ -3,18 +3,28 @@ package cn.mooncookie.kbffa.Game.Listener;
 import cn.mooncookie.kbffa.Game.Items;
 import cn.mooncookie.kbffa.KnockBackFFA;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemsListener implements Listener {
     private final int featherCd = 10;
@@ -24,9 +34,11 @@ public class ItemsListener implements Listener {
     @EventHandler
     public void onRightClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)) return;
+        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR))
+            return;
         ItemStack i = e.getItem();
-        if (e.getItem() == null) return;
+        if (e.getItem() == null)
+            return;
         if (i.getType() == Material.FEATHER) {
             long lastFeatherTime = 0;
             for (MetadataValue meta : player.getMetadata("lastFeatherTime")) {
@@ -37,33 +49,61 @@ public class ItemsListener implements Listener {
             }
             long currentTime = System.currentTimeMillis();
             if (lastFeatherTime == 0 || currentTime - lastFeatherTime >= featherCd * 1000L) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5 * 20, 4, false, true), false);
-                player.setMetadata("lastFeatherTime", new FixedMetadataValue(KnockBackFFA.getInstance(), System.currentTimeMillis()));
+                player.addPotionEffect(
+                        new PotionEffect(PotionEffectType.SPEED, 5 * 20, 4, false, true), false);
+                player.setMetadata("lastFeatherTime",
+                        new FixedMetadataValue(KnockBackFFA.getInstance(), System.currentTimeMillis()));
             } else {
                 player.sendMessage("§c请在" + (featherCd - (currentTime - lastFeatherTime) / 1000L) + "秒后再使用！");
                 e.setCancelled(true);
             }
         }
         if (i.getType() == Material.BOW) {
-            Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> {
-                long lastBowTime = 0;
-                for (MetadataValue meta : player.getMetadata("lastBowTime")) {
-                    if (meta.getOwningPlugin().equals(KnockBackFFA.getInstance())) {
-                        lastBowTime = meta.asLong();
-                        break;
+            long lastBowTime = 0;
+            for (MetadataValue meta : player.getMetadata("lastBowTime")) {
+                if (meta.getOwningPlugin().equals(KnockBackFFA.getInstance())) {
+                    lastBowTime = meta.asLong();
+                    break;
+                }
+            }
+            if (player.getInventory().contains(Material.ARROW) && (lastBowTime == 0 || System.currentTimeMillis() - lastBowTime >= bowCd * 1000L)) {
+                player.setMetadata("lastBowTime",
+                        new FixedMetadataValue(KnockBackFFA.getInstance(), System.currentTimeMillis()));
+               final ItemStack bowItem = i.clone();
+                new BukkitRunnable() {
+                    int playedTicks = 0;
+                    @Override
+                    public void run() {
+                        playedTicks += 20;
+                        if (playedTicks >= bowCd * 20) {
+                            Inventory inventory = player.getInventory();
+                            int bowSlot = inventory.first(Material.BOW);
+                            if (bowSlot >= 0) {
+                                ItemStack bowArrow = bowItem.clone();;
+                                ItemMeta itemMeta = bowArrow.getItemMeta() ;
+                               itemMeta.setDisplayName(bowItem.getItemMeta().getDisplayName());
+                                bowArrow.setItemMeta(itemMeta);
+                                inventory.setItem(bowSlot , bowArrow);
+                            }
+                            cancel();
+                            return;
+                        }
+                        int bowSlot = player.getInventory().first(Material.BOW);
+                        if (bowSlot >= 0) {
+                            e.setCancelled(true);
+                            ItemStack bowArrow = bowItem.clone();
+                            ItemMeta itemMeta = bowArrow.getItemMeta();
+                            itemMeta.setDisplayName("§c" + Integer.toString((bowCd * 20 - playedTicks) / 20));
+                            bowArrow.setItemMeta(itemMeta);
+                            player.getInventory().setItem(bowSlot , bowArrow);
+                        } else {
+                            cancel();
+                        }
                     }
-                }
-                long currentTime = System.currentTimeMillis();
-                if (lastBowTime == 0 || currentTime - lastBowTime >= bowCd * 1000L) {
-                    player.setMetadata("lastBowTime", new FixedMetadataValue(KnockBackFFA.getInstance(), System.currentTimeMillis()));
-                } else {
-                    player.sendMessage("§c请在" + (bowCd - (currentTime - lastBowTime) / 1000L) + "秒后再使用！");
-                    e.setCancelled(true);
-                }
-            }, 5 * 60 * 20L);
+                }.runTaskTimer(KnockBackFFA.getInstance(), 20L, 20L);
+            }
+            }
         }
-    }
-
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
         Player player = e.getPlayer();

@@ -30,7 +30,6 @@ public class PlayerJoinLeave implements Listener {
 
         player.setHealth(20);
         player.setFoodLevel(20);
-
         player.getInventory().clear();
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> Items.giveItem(player), 1);
         player.getActivePotionEffects().clear();

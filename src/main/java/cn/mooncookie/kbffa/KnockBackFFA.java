@@ -52,6 +52,7 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new MapChangeListener(this), this);
         getCommand("nextmap").setExecutor(new MapChangeListener(this));
         getServer().getPluginManager().registerEvents(new ChatFormat(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(),this);
         getServer().getPluginManager().registerEvents(new DamageListener(), this);
         getServer().getPluginManager().registerEvents(new ItemsListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinLeave(), this);

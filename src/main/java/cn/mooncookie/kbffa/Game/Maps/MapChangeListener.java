@@ -32,7 +32,6 @@ public class MapChangeListener implements CommandExecutor, Listener {
 
     public MapChangeListener(JavaPlugin plugin) {
         Collections.addAll(worldNames, "Shield", "Garden", "RedDeath", "Desert", "Woods", "Lime", "Nether", "Colors", "Prismarine", "Beach", "Clay", "Sanic", "Savanna", "Chess");
-
         World defaultWorld = Bukkit.getWorld("Shield");
         for (Player player : Bukkit.getOnlinePlayers()) {
             Location newSpawn = defaultWorld.getSpawnLocation();
