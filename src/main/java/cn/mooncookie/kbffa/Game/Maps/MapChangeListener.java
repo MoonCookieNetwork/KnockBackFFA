@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,16 +33,23 @@ import java.util.List;
  *   @Date: 2023/5/24
  * **********************
  */
+
 public class MapChangeListener implements CommandExecutor, Listener {
+
     private final JavaPlugin plugin;
     public static final List<String> worldNames = new ArrayList<>();
     public static int currentMapIndex = 0;
     public static String mapName;
-    public static int countdown = 50;
+    public static int countdown = 114514;
 
     public MapChangeListener(JavaPlugin plugin) {
         this.plugin = plugin;
         Collections.addAll(worldNames, "Shield", "Garden", "RedDeath", "Desert", "Woods", "Lime", "Nether", "Colors", "Prismarine", "Beach", "Clay", "Sanic", "Savanna", "Chess");
+
+        if (!new File(plugin.getDataFolder(), "mapdata.yml").exists()) {
+            saveMapData();
+        }
+        loadMapData();
 
         World defaultWorld = Bukkit.getWorld(worldNames.get(currentMapIndex));
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -54,8 +64,34 @@ public class MapChangeListener implements CommandExecutor, Listener {
                 changeMap();
             }
         }.runTaskTimer(plugin, 0L, 10L);
+
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    private void loadMapData() {
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "mapdata.yml"));
+        if (config.contains("currentMapIndex")) {
+            currentMapIndex = config.getInt("currentMapIndex");
+        }
+        if (config.contains("mapName")) {
+            mapName = config.getString("mapName");
+        }
+        if (config.contains("countdown")) {
+            countdown = config.getInt("countdown");
+        }
+    }
+
+    public void saveMapData() {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("currentMapIndex", currentMapIndex);
+        config.set("mapName", mapName);
+        config.set("countdown", countdown);
+        try {
+            config.save(new File(plugin.getDataFolder(), "mapdata.yml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void nextMap() {
         currentMapIndex = (currentMapIndex + 1) % worldNames.size();
@@ -70,19 +106,20 @@ public class MapChangeListener implements CommandExecutor, Listener {
             mapName = nextWorld.getName();
             player.sendMessage("地图已切换到: " + mapName);
         }
+        saveMapData();
     }
 
     private void changeMap() {
         countdown--;
         if (countdown == 0) {
             nextMap();
-            countdown = 50;
+            countdown = 114514;
         }
+        saveMapData();
     }
 
     private void openChangeMapGUI(Player player) {
         Inventory gui = Bukkit.createInventory(player, 27, "更换地图");
-
         for (String worldName : worldNames) {
             ItemStack worldButton = new ItemStack(Material.PAPER);
             ItemMeta meta = worldButton.getItemMeta();
@@ -116,8 +153,9 @@ public class MapChangeListener implements CommandExecutor, Listener {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 Location newSpawn = nextWorld.getSpawnLocation();
                 p.teleport(newSpawn);
-                p.sendMessage("地图已切换到：" + mapName);
+                p.sendMessage("地图已切换到： " + mapName);
             }
+            saveMapData();
         }
         ItemStack currentMapButton = new ItemStack(Material.MAP);
         ItemMeta meta = currentMapButton.getItemMeta();
@@ -129,32 +167,26 @@ public class MapChangeListener implements CommandExecutor, Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        World defaultWorld = Bukkit.getWorld(worldNames.get(currentMapIndex));
-        if (!player.hasPlayedBefore()) {
-            mapName = defaultWorld.getName();
-            Location spawnLocation = defaultWorld.getSpawnLocation();
-            player.teleport(spawnLocation);
-        } else {
-            World currentWorld = Bukkit.getWorld(worldNames.get(currentMapIndex));
-            mapName = defaultWorld.getName();
-            Location spawnLocation = currentWorld.getSpawnLocation();
-            player.teleport(spawnLocation);
-        }
+        World currentWorld = Bukkit.getWorld(mapName);
+        Location spawnLocation = currentWorld.getSpawnLocation();
+        player.teleport(spawnLocation);
         player.getInventory().clear();
         Items.giveItem(player);
+        saveMapData();
     }
-
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        World currentWorld = Bukkit.getWorld(worldNames.get(currentMapIndex));
-        mapName = currentWorld.getName(); // 更新当前地图名字
-        Location spawnLocation = currentWorld.getSpawnLocation();
-        event.setRespawnLocation(spawnLocation);
-        player.getInventory().clear();
-        Items.giveItem(player);
+       Player player = event.getPlayer();
+       World currentWorld = Bukkit.getWorld(mapName);
+       Location spawnLocation = currentWorld.getSpawnLocation();
+       event.setRespawnLocation(spawnLocation);
+       player.getInventory().clear();
+       Items.giveItem(player);
+       saveMapData();
     }
-    public boolean onCommand(CommandSender sender , Command cmd , String s , String[] strings) {
+
+
+    public boolean onCommand(CommandSender sender, Command cmd, String s , String[] strings) {
         if (!sender.hasPermission("KnockBackFFA.Command.NextMap")) {
             sender.sendMessage("§c你没有使用此命令的权限！");
             return true;

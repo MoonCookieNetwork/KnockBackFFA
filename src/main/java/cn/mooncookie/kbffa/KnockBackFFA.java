@@ -28,18 +28,11 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
         return instance;
     }
 
+    private MapChangeListener mapChangeListener;
     @Override
     public void onEnable() {
         instance = this;
         Clearlistener = new BlockClearListener();
-/*        World defaultWorld = Bukkit.getWorld("Shield");
-        if (defaultWorld != null) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.teleport(defaultWorld.getSpawnLocation());
-            }
-            MapChangeListener.MapName = defaultWorld.getName();
-            MapChangeListener.currentMapIndex = MapChangeListener.worldNames.indexOf(MapChangeListener.MapName);
-        }*/
         playerDataFile = new File(getDataFolder(), "playerdata.yml");
         PlayerKillDeathListener playerKillDeathListener = new PlayerKillDeathListener(playerDataFile);
         getServer().getPluginManager().registerEvents(Clearlistener,this);
@@ -74,6 +67,7 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         Clearlistener.clearBlocks();
+        mapChangeListener.saveMapData();
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         getLogger().info(ChatColor.GREEN + "插件已关闭");
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");

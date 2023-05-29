@@ -55,8 +55,6 @@ public class Items {
             flameStickMeta.spigot().setUnbreakable(true);
             flameStick.setItemMeta(flameStickMeta);
             p.getInventory().setItem(3, flameStick);
-        } else if ( p.getName().equals("YukiEnd")) {
-            p.getPlayer().kickPlayer("sb");
         }
     }
 

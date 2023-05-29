@@ -90,7 +90,6 @@ public class ItemsListener implements Listener {
                         }
                         int bowSlot = player.getInventory().first(Material.BOW);
                         if (bowSlot >= 0) {
-                            e.setCancelled(true);
                             ItemStack bowArrow = bowItem.clone();
                             ItemMeta itemMeta = bowArrow.getItemMeta();
                             itemMeta.setDisplayName("§c" + Integer.toString((bowCd * 20 - playedTicks) / 20));
