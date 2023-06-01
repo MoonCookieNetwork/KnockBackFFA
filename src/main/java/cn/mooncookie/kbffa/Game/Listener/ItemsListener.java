@@ -33,11 +33,9 @@ public class ItemsListener implements Listener {
         if (e.getItem() == null)
             return;
         if (i.getType() == Material.BLAZE_ROD && e.getAction() == Action.LEFT_CLICK_AIR || i.getType() == Material.BLAZE_ROD && e.getAction() == Action.LEFT_CLICK_BLOCK) {
-            e.setCancelled(true);
-            player.setVelocity(player.getLocation().getDirection().multiply(30.5).setY(30.5));
-            player.playSound(player.getLocation() , Sound.FIRE_IGNITE , 1 , 1);
+            player.setVelocity(player.getLocation().getDirection().multiply(10.5).setY(10.5));
+            player.playSound(player.getLocation(), Sound.FIREWORK_LAUNCH, 1, 1);
             player.damage(0);
-            player.sendMessage("TROLLLLLLLLLLLLLLLLLLLLLL");
             return;
         }
         if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR))
@@ -53,13 +51,14 @@ public class ItemsListener implements Listener {
             long currentTime = System.currentTimeMillis();
             if (lastFeatherTime == 0 || currentTime - lastFeatherTime >= featherCd * 1000L) {
                 player.addPotionEffect(
-                        new PotionEffect(PotionEffectType.SPEED , 5 * 20 , 4 , false , true) , false);
-                player.setMetadata("lastFeatherTime" ,
-                        new FixedMetadataValue(KnockBackFFA.getInstance() , System.currentTimeMillis()));
+                        new PotionEffect(PotionEffectType.SPEED, 5 * 20, 4, false, true), false);
+                player.setMetadata("lastFeatherTime",
+                        new FixedMetadataValue(KnockBackFFA.getInstance(), System.currentTimeMillis()));
 
                 final ItemStack FeatherItem = player.getItemInHand().clone();
                 new BukkitRunnable() {
                     int playedTicks = 0;
+
                     @Override
                     public void run() {
                         playedTicks += 20;
@@ -72,7 +71,7 @@ public class ItemsListener implements Listener {
                                 itemMeta.setDisplayName(FeatherItem.getItemMeta().getDisplayName());
                                 itemMeta.removeEnchant(Enchantment.KNOCKBACK);
                                 Featheris.setItemMeta(itemMeta);
-                                inventory.setItem(Feather , Featheris);
+                                inventory.setItem(Feather, Featheris);
                             }
                             cancel();
                             return;
@@ -82,17 +81,17 @@ public class ItemsListener implements Listener {
                             ItemStack Featheris = FeatherItem.clone();
                             ItemMeta itemMeta = Featheris.getItemMeta();
                             itemMeta.setDisplayName("§b神子技能CD§a(§d" + (featherCd * 20 - playedTicks) / 20 + "§a)");
-                            itemMeta.addEnchant(Enchantment.KNOCKBACK,1,true);
+                            itemMeta.addEnchant(Enchantment.KNOCKBACK, 1, true);
                             Featheris.setItemMeta(itemMeta);
-                            player.getInventory().setItem(Feather , Featheris);
+                            player.getInventory().setItem(Feather, Featheris);
                         } else {
                             cancel();
                         }
                     }
-                }.runTaskTimer(KnockBackFFA.getInstance() , 20L , 20L);
+                }.runTaskTimer(KnockBackFFA.getInstance(), 20L, 20L);
             } else {
                 e.setCancelled(true);
-                player.sendMessage("§c请等待冷却倒计时结束 sb！");
+                player.sendMessage("§c请等待冷却倒计时结束！");
             }
         }
     }
@@ -111,11 +110,12 @@ public class ItemsListener implements Listener {
             }
         }
         if (player.getInventory().contains(Material.ARROW) && (lastBowTime == 0 || System.currentTimeMillis() - lastBowTime >= bowCd * 1000L)) {
-            player.setMetadata("lastBowTime" ,
-                    new FixedMetadataValue(KnockBackFFA.getInstance() , System.currentTimeMillis()));
+            player.setMetadata("lastBowTime",
+                    new FixedMetadataValue(KnockBackFFA.getInstance(), System.currentTimeMillis()));
             final ItemStack bowItem = player.getItemInHand().clone();
             new BukkitRunnable() {
                 int playedTicks = 0;
+
                 @Override
                 public void run() {
                     playedTicks += 20;
@@ -128,7 +128,7 @@ public class ItemsListener implements Listener {
                             itemMeta.setDisplayName(bowItem.getItemMeta().getDisplayName());
                             itemMeta.removeEnchant(Enchantment.KNOCKBACK);
                             bowArrow.setItemMeta(itemMeta);
-                            inventory.setItem(bowSlot , bowArrow);
+                            inventory.setItem(bowSlot, bowArrow);
                         }
                         cancel();
                         return;
@@ -137,18 +137,18 @@ public class ItemsListener implements Listener {
                     if (bowSlot >= 0) {
                         ItemStack bowArrow = bowItem.clone();
                         ItemMeta itemMeta = bowArrow.getItemMeta();
-                        itemMeta.setDisplayName("§d雷电将军技能CD§a(§e" + (bowCd * 20 - playedTicks) / 20 + "§a)") ;
-                        itemMeta.addEnchant(Enchantment.KNOCKBACK,1,true);
+                        itemMeta.setDisplayName("§d雷电将军技能CD§a(§e" + (bowCd * 20 - playedTicks) / 20 + "§a)");
+                        itemMeta.addEnchant(Enchantment.KNOCKBACK, 1, true);
                         bowArrow.setItemMeta(itemMeta);
-                        player.getInventory().setItem(bowSlot , bowArrow);
+                        player.getInventory().setItem(bowSlot, bowArrow);
                     } else {
                         cancel();
                     }
                 }
-            }.runTaskTimer(KnockBackFFA.getInstance() , 20L , 20L);
+            }.runTaskTimer(KnockBackFFA.getInstance(), 20L, 20L);
         } else {
             e.setCancelled(true);
-            player.sendMessage("§c请等待冷却倒计时结束 sb！");
+            player.sendMessage("§c请等待冷却倒计时结束！");
         }
     }
 
@@ -172,6 +172,7 @@ public class ItemsListener implements Listener {
                 final ItemStack JumpPadItem = player.getItemInHand().clone();
                 new BukkitRunnable() {
                     int playedTicks = 0;
+
                     @Override
                     public void run() {
                         playedTicks += 20;
@@ -184,7 +185,7 @@ public class ItemsListener implements Listener {
                                 itemMeta.setDisplayName(JumpPadItem.getItemMeta().getDisplayName());
                                 itemMeta.removeEnchant(Enchantment.KNOCKBACK);
                                 JumpPadis.setItemMeta(itemMeta);
-                                inventory.setItem(JumpPad , JumpPadis);
+                                inventory.setItem(JumpPad, JumpPadis);
                             }
                             cancel();
                             return;
@@ -194,17 +195,17 @@ public class ItemsListener implements Listener {
                             ItemStack JumpPadis = JumpPadItem.clone();
                             ItemMeta itemMeta = JumpPadis.getItemMeta();
                             itemMeta.setDisplayName("§6旅行者技能CD§a(§c" + (featherCd * 20 - playedTicks) / 20 + "§a)");
-                            itemMeta.addEnchant(Enchantment.KNOCKBACK,1,true);
+                            itemMeta.addEnchant(Enchantment.KNOCKBACK, 1, true);
                             JumpPadis.setItemMeta(itemMeta);
-                            player.getInventory().setItem(JumpPad , JumpPadis);
+                            player.getInventory().setItem(JumpPad, JumpPadis);
                         } else {
                             cancel();
                         }
                     }
-                }.runTaskTimer(KnockBackFFA.getInstance() , 20L , 20L);
+                }.runTaskTimer(KnockBackFFA.getInstance(), 20L, 20L);
             } else {
                 e.setCancelled(true);
-                player.sendMessage("§c请等待冷却倒计时结束 sb！");
+                player.sendMessage("§c请等待冷却倒计时结束！");
             }
             return;
         }
@@ -219,7 +220,7 @@ public class ItemsListener implements Listener {
         Player player = e.getPlayer();
         Location location = player.getLocation();
         if (location.getBlock().getType() == Material.GOLD_PLATE) {
-            player.setVelocity(location.getDirection().multiply(1.5).setY(1.5));
+            player.setVelocity(location.getDirection().multiply(2).setY(2));
             player.playSound(location, Sound.PISTON_EXTEND, 1, 1);
             player.damage(0);
         }

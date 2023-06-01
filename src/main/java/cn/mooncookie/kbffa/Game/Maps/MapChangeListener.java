@@ -79,7 +79,7 @@ public class MapChangeListener implements Listener, CommandExecutor {
             if (countdown <= 0) {
                 changeMap();
             }
-        }, 20L, 20L);
+        }, 0L,20L);
     }
 
     private void changeMap() {
@@ -108,14 +108,13 @@ public class MapChangeListener implements Listener, CommandExecutor {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!event.getView().getTitle().equals("§7[§eMooncookie-§6KBFFA§7]§b更换地图")) {
+        if (!event.getView().getTitle().equals("§8更换地图")) {
             return;
         }
         event.setCancelled(true);
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
             return;
         }
-        Player player = (Player) event.getWhoClicked();
         GenShinImpact map = GenShinImpact.getByDisplayName(event.getCurrentItem().getItemMeta().getDisplayName());
         if (map != null && map != currentMap) {
             currentMap = map;
@@ -129,20 +128,21 @@ public class MapChangeListener implements Listener, CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("changemap")) {
-            Player player = (Player) sender;
-            player.openInventory(getMapsInventory());
+        if (!sender.hasPermission("KBFFA.Command.ChangeMap")) {
+            sender.sendMessage("§c你没有使用此命令的权限！");
             return true;
         }
-        return false;
+        Player player = (Player) sender;
+        player.openInventory(getMapsInventory());
+        return true;
     }
 
     private Inventory getMapsInventory() {
-        Inventory gui = Bukkit.createInventory(null, 27, "§7[§eMooncookie-§6KBFFA§7]§b更换地图");
+        Inventory gui = Bukkit.createInventory(null, 27, "§8更换地图");
         for (GenShinImpact map : GenShinImpact.values()) {
             ItemStack worldButton = new ItemStack(Material.PAPER);
             ItemMeta meta = worldButton.getItemMeta();
-            meta.addEnchant(Enchantment.KNOCKBACK,114514,true);
+            meta.addEnchant(Enchantment.KNOCKBACK, 114514, true);
             meta.setDisplayName(map.getDisplayName());
             worldButton.setItemMeta(meta);
             gui.addItem(worldButton);

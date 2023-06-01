@@ -70,7 +70,7 @@ public enum GenShinImpact {
         SpeedItem.setItemMeta(SpeedItemMeta);
         player.getInventory().setItem(7, SpeedItem);
 
-        giveEnderPearl(player);
+        player.getInventory().setItem(8, EnderPearl());
 
         ItemStack Arrows = new ItemStack(Material.ARROW, 64);
         player.getInventory().setItem(17, Arrows);
@@ -98,9 +98,9 @@ public enum GenShinImpact {
         p.getInventory().setItem(4, JumpPad);
     }
 
-    public static void giveEnderPearl(Player p) {
+    public static ItemStack EnderPearl() {
         ItemStack EnderPeral = new ItemStack(Material.ENDER_PEARL, 1);
-        p.getInventory().setItem(8, EnderPeral);
+        return EnderPeral;
     }
 
     public static GenShinImpact getByDisplayName(String displayName) {

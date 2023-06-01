@@ -2,14 +2,15 @@ package cn.mooncookie.kbffa.Game.Listener;
 
 import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
 import cn.mooncookie.kbffa.KnockBackFFA;
-import org.bukkit.*;
+import cn.mooncookie.kbffa.LPRankProvider;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class DamageListener implements Listener {
 
@@ -32,18 +33,9 @@ public class DamageListener implements Listener {
         }
 
         if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+            if (((Player) e.getEntity()).getPlayer() == ((Player) e.getEntity()).getPlayer().getKiller()) return;
             e.setDamage(0);
             return;
-        }
-
-        if (player.getKiller() instanceof Player) {
-            Player killer = player.getKiller();
-
-            ItemStack itemStack = new ItemStack(Material.ENDER_PEARL, 1);
-            killer.getInventory().addItem(itemStack);
-
-            killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
-            killer.sendMessage("开挂？？？!");
         }
 
         e.setCancelled(true);
@@ -55,7 +47,7 @@ public class DamageListener implements Listener {
         Player killer = player.getKiller();
 
         if (killer != null && !player.equals(killer)) {
-            Bukkit.broadcastMessage(ChatColor.RED + player.getName() + ChatColor.AQUA +  " 被  " + ChatColor.GREEN + killer.getName() + ChatColor.GOLD +"  gank了！");
+            Bukkit.broadcastMessage(LPRankProvider.getPrefix(player) + player.getDisplayName() + " §7被击杀， 击杀者： " + LPRankProvider.getPrefix(killer) + killer.getDisplayName() + "§7。");
         }
     }
 
@@ -66,9 +58,8 @@ public class DamageListener implements Listener {
         Location location = player.getLocation();
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> {
             if (player.getLocation().getWorld().getName().equals("world")) {
-/*                player.kickPlayer("§f在加载你的击退战场数据时发生了一个问题， 请重新加入后再试！");*/
                 MapChangeListener.currentMap.teleport(player);
-                player.sendMessage("§c检测到你是第一次进入击退战场,已将你传送到当前地图!");
+                player.sendMessage("§c检测到你是第一次进入击退战场， 已将你传送到当前地图。");
             }
         }, 10);
         if (location.getBlockY() <= 0.0) {

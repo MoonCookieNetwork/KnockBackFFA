@@ -4,5 +4,4 @@ version: 1.0
 author: YukiEnd
 
 commands:
-  nextmap:
   changemap:

@@ -2,8 +2,9 @@ package cn.mooncookie.kbffa.Game.Listener;
 
 import cn.mooncookie.kbffa.Game.GenShinImpact;
 import cn.mooncookie.kbffa.KnockBackFFA;
-import cn.mooncookie.kbffa.LPRankProvider;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,9 +33,9 @@ public class PlayerKillDeathListener implements Listener {
     public void onLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
-        int killCount = playerData.getInt(playerUUID + ".kills", 0);
-        int deathCount = playerData.getInt(playerUUID + ".deaths", 0);
-        int pointsCount = playerData.getInt(playerUUID + ".points", 0);
+        int killCount = playerData.getInt(playerUUID + ".Kills", 0);
+        int deathCount = playerData.getInt(playerUUID + ".Deaths", 0);
+        int pointsCount = playerData.getInt(playerUUID + ".Points", 0);
         kills.put(player, killCount);
         deaths.put(player, deathCount);
         points.put(player, pointsCount);
@@ -49,7 +50,9 @@ public class PlayerKillDeathListener implements Listener {
             kills.put(killer, killCount);
             int pointsCount = points.getOrDefault(killer, 0) + 5;
             points.put(killer, pointsCount);
-            GenShinImpact.giveEnderPearl(killer);
+
+            killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
+            killer.getInventory().addItem(GenShinImpact.EnderPearl());
             savePlayerData(killer);
         }
     }
@@ -60,6 +63,7 @@ public class PlayerKillDeathListener implements Listener {
             Player victim = event.getEntity();
             Player killer = event.getEntity().getKiller();
 
+            victim.setGameMode(GameMode.SURVIVAL);
             victim.setHealth(20);
             victim.setFoodLevel(20);
             victim.getInventory().clear();
@@ -70,15 +74,14 @@ public class PlayerKillDeathListener implements Listener {
             deaths.put(victim, deathCount);
             savePlayerData(victim);
             Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> victim.spigot().respawn(), 1);
-            event.setDeathMessage(LPRankProvider.getPrefixColor(victim) + victim.getDisplayName() + " 被击杀， 击杀者： " + LPRankProvider.getPrefixColor(killer) + killer.getDisplayName());
         }
     }
 
     private void savePlayerData(Player player) {
         UUID playerUUID = player.getUniqueId();
-        playerData.set(playerUUID + ".kills", kills.getOrDefault(player, 0));
-        playerData.set(playerUUID + ".deaths", deaths.getOrDefault(player, 0));
-        playerData.set(playerUUID + ".points", points.getOrDefault(player, 0));
+        playerData.set(playerUUID + ".Kills", kills.getOrDefault(player, 0));
+        playerData.set(playerUUID + ".Deaths", deaths.getOrDefault(player, 0));
+        playerData.set(playerUUID + ".Points", points.getOrDefault(player, 0));
         try {
             playerData.save(playerDataFile);
         } catch (Exception e) {

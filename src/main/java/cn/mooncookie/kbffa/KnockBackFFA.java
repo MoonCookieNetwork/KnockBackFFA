@@ -40,7 +40,6 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
         new RefreshScoreBoard(this).runTaskTimer(this, 0, 20);
 
         //Command
-        getCommand("nextmap").setExecutor(new MapChangeListener(this));
         getCommand("changemap").setExecutor(new MapChangeListener(this));
 
         //Listener
