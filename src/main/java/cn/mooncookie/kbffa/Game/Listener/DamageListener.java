@@ -1,5 +1,6 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
+import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
 import cn.mooncookie.kbffa.KnockBackFFA;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -44,7 +45,9 @@ public class DamageListener implements Listener {
         Location location = player.getLocation();
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> {
             if (player.getLocation().getWorld().getName().equals("world")) {
-                player.kickPlayer("§f在加载你的击退战场数据时发生了一个问题， 请重新加入后再试！");
+/*                player.kickPlayer("§f在加载你的击退战场数据时发生了一个问题， 请重新加入后再试！");*/
+                MapChangeListener.currentMap.teleport(player);
+                player.sendMessage("§c检测到你是第一次进入击退战场,已将你传送到当前地图!");
             }
         }, 10);
         if (location.getBlockY() <= 0.0) {

@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
@@ -59,50 +60,60 @@ public class ItemsListener implements Listener {
                 e.setCancelled(true);
             }
         }
-        if (i.getType() == Material.BOW) {
-            long lastBowTime = 0;
-            for (MetadataValue meta : player.getMetadata("lastBowTime")) {
-                if (meta.getOwningPlugin().equals(KnockBackFFA.getInstance())) {
-                    lastBowTime = meta.asLong();
-                    break;
-                }
-            }
-            if (player.getInventory().contains(Material.ARROW) && (lastBowTime == 0 || System.currentTimeMillis() - lastBowTime >= bowCd * 1000L)) {
-                player.setMetadata("lastBowTime",
-                        new FixedMetadataValue(KnockBackFFA.getInstance(), System.currentTimeMillis()));
-                final ItemStack bowItem = i.clone();
-                new BukkitRunnable() {
-                    int playedTicks = 0;
+    }
 
-                    @Override
-                    public void run() {
-                        playedTicks += 20;
-                        if (playedTicks >= bowCd * 20) {
-                            Inventory inventory = player.getInventory();
-                            int bowSlot = inventory.first(Material.BOW);
-                            if (bowSlot >= 0) {
-                                ItemStack bowArrow = bowItem.clone();
-                                ItemMeta itemMeta = bowArrow.getItemMeta();
-                                itemMeta.setDisplayName(bowItem.getItemMeta().getDisplayName());
-                                bowArrow.setItemMeta(itemMeta);
-                                inventory.setItem(bowSlot, bowArrow);
-                            }
-                            cancel();
-                            return;
-                        }
-                        int bowSlot = player.getInventory().first(Material.BOW);
+    @EventHandler
+    public void onBowShoot(EntityShootBowEvent e) {
+        if (!(e.getEntity() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) e.getEntity();
+        long lastBowTime = 0;
+        for (MetadataValue meta : player.getMetadata("lastBowTime")) {
+            if (meta.getOwningPlugin().equals(KnockBackFFA.getInstance())) {
+                lastBowTime = meta.asLong();
+                break;
+            }
+        }
+        if (player.getInventory().contains(Material.ARROW) && (lastBowTime == 0 || System.currentTimeMillis() - lastBowTime >= bowCd * 1000L)) {
+            player.setMetadata("lastBowTime" ,
+                    new FixedMetadataValue(KnockBackFFA.getInstance() , System.currentTimeMillis()));
+            final ItemStack bowItem = player.getItemInHand().clone();
+            new BukkitRunnable() {
+                int playedTicks = 0;
+
+                @Override
+                public void run() {
+                    playedTicks += 20;
+                    if (playedTicks >= bowCd * 20) {
+                        Inventory inventory = player.getInventory();
+                        int bowSlot = inventory.first(Material.BOW);
                         if (bowSlot >= 0) {
                             ItemStack bowArrow = bowItem.clone();
                             ItemMeta itemMeta = bowArrow.getItemMeta();
-                            itemMeta.setDisplayName("§c" + (bowCd * 20 - playedTicks) / 20);
+                            itemMeta.setDisplayName(bowItem.getItemMeta().getDisplayName());
                             bowArrow.setItemMeta(itemMeta);
-                            player.getInventory().setItem(bowSlot, bowArrow);
-                        } else {
-                            cancel();
+                            inventory.setItem(bowSlot , bowArrow);
                         }
+                        cancel();
+                        return;
                     }
-                }.runTaskTimer(KnockBackFFA.getInstance(), 20L, 20L);
-            }
+                    int bowSlot = player.getInventory().first(Material.BOW);
+                    if (bowSlot >= 0) {
+                        ItemStack bowArrow = bowItem.clone();
+                        ItemMeta itemMeta = bowArrow.getItemMeta();
+                        itemMeta.setDisplayName("§c" + (bowCd * 20 - playedTicks) / 20);
+                        bowArrow.setItemMeta(itemMeta);
+                        player.getInventory().setItem(bowSlot , bowArrow);
+                    } else {
+                        cancel();
+                    }
+                }
+            }.runTaskTimer(KnockBackFFA.getInstance() , 20L , 20L);
+        } else {
+            e.setCancelled(true);
+            player.sendMessage("§c请等待冷却倒计时结束 sb！");
+            player.kickPlayer("冷却没结束你射你母亲呢");
         }
     }
 

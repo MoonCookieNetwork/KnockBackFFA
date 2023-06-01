@@ -10,6 +10,7 @@ import cn.mooncookie.kbffa.ScoreBoard.RefreshScoreBoard;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -29,27 +30,32 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+        PluginManager pluginManager = getServer().getPluginManager();
         Clearlistener = new BlockClearListener();
         playerDataFile = new File(getDataFolder(), "playerdata.yml");
         PlayerKillDeathListener playerKillDeathListener = new PlayerKillDeathListener(playerDataFile);
-        getServer().getPluginManager().registerEvents(Clearlistener, this);
-        getServer().getPluginManager().registerEvents(playerKillDeathListener, this);
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         getLogger().info(ChatColor.GREEN + "插件已启用");
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         new RefreshScoreBoard(this).runTaskTimer(this, 0, 20);
-        getServer().getPluginManager().registerEvents(new BlockClearListener(), this);
-        getServer().getPluginManager().registerEvents(new MapChangeListener(this), this);
+
+        //Command
         getCommand("nextmap").setExecutor(new MapChangeListener(this));
         getCommand("changemap").setExecutor(new MapChangeListener(this));
-        getServer().getPluginManager().registerEvents(new ChatFormat(), this);
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        getServer().getPluginManager().registerEvents(new DamageListener(), this);
-        getServer().getPluginManager().registerEvents(new ItemsListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoinLeave(), this);
-        getServer().getPluginManager().registerEvents(new BlockProtect(), this);
-        getServer().getPluginManager().registerEvents(new NoMobSpawn(), this);
-        getServer().getPluginManager().registerEvents(new StopWeatherChange(), this);
+
+        //Listener
+        pluginManager.registerEvents(Clearlistener, this);
+        pluginManager.registerEvents(playerKillDeathListener, this);
+        pluginManager.registerEvents(new BlockClearListener(), this);
+        pluginManager.registerEvents(new MapChangeListener(this), this);
+        pluginManager.registerEvents(new ChatFormat(), this);
+        pluginManager.registerEvents(new PlayerListener(), this);
+        pluginManager.registerEvents(new DamageListener(), this);
+        pluginManager.registerEvents(new ItemsListener(), this);
+        pluginManager.registerEvents(new PlayerJoinLeave(), this);
+        pluginManager.registerEvents(new BlockProtect(), this);
+        pluginManager.registerEvents(new NoMobSpawn(), this);
+        pluginManager.registerEvents(new StopWeatherChange(), this);
         File dataFolder = getDataFolder();
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
