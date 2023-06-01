@@ -2,14 +2,14 @@ package cn.mooncookie.kbffa.Game.Listener;
 
 import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
 import cn.mooncookie.kbffa.KnockBackFFA;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class DamageListener implements Listener {
 
@@ -35,7 +35,28 @@ public class DamageListener implements Listener {
             e.setDamage(0);
             return;
         }
+
+        if (player.getKiller() instanceof Player) {
+            Player killer = player.getKiller();
+
+            ItemStack itemStack = new ItemStack(Material.ENDER_PEARL, 1);
+            killer.getInventory().addItem(itemStack);
+
+            killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
+            killer.sendMessage("开挂？？？!");
+        }
+
         e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        Player killer = player.getKiller();
+
+        if (killer != null && !player.equals(killer)) {
+            Bukkit.broadcastMessage(ChatColor.RED + player.getName() + ChatColor.AQUA +  " 被  " + ChatColor.GREEN + killer.getName() + ChatColor.GOLD +"  gank了！");
+        }
     }
 
     //FastDie
