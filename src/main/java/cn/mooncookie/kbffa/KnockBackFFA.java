@@ -6,7 +6,6 @@ import cn.mooncookie.kbffa.BaseListener.NoMobSpawn;
 import cn.mooncookie.kbffa.BaseListener.StopWeatherChange;
 import cn.mooncookie.kbffa.Game.Listener.*;
 import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
-import cn.mooncookie.kbffa.ScoreBoard.RefreshScoreBoard;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
@@ -21,7 +20,6 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
     public static File playerDataFile;
     private static KnockBackFFA instance;
     private BlockClearListener Clearlistener;
-    private MapChangeListener mapChangeListener;
 
     public static KnockBackFFA getInstance() {
         return instance;
@@ -37,7 +35,7 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         getLogger().info(ChatColor.GREEN + "插件已启用");
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
-        new RefreshScoreBoard(this).runTaskTimer(this, 0, 20);
+        //new RefreshScoreBoard(this).runTaskTimer(this, 0, 20);
 
         //Command
         getCommand("changemap").setExecutor(new MapChangeListener(this));

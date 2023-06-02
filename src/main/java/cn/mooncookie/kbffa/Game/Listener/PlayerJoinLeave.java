@@ -1,6 +1,7 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
 import cn.mooncookie.kbffa.Game.GenShinImpact;
+import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
 import cn.mooncookie.kbffa.KnockBackFFA;
 import cn.mooncookie.kbffa.LPRankProvider;
 import cn.mooncookie.kbffa.ScoreBoard.ScoreBoard;
@@ -8,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -15,11 +17,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerJoinLeave implements Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-
         ScoreBoard.updateScoreboard(player);
+
+        Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> {
+            if (player.getLocation().getWorld().getName().equals("world")) {
+                MapChangeListener.currentMap.teleport(player);
+                player.sendMessage("§c检测到你是第一次进入击退战场， 已将你传送到当前地图。");
+            }
+        }, 60);
 
         player.setGameMode(GameMode.SURVIVAL);
         player.setHealth(20);
@@ -37,6 +45,7 @@ public class PlayerJoinLeave implements Listener {
             e.setJoinMessage(NonPermissionJoinFormat);
         }
     }
+
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {

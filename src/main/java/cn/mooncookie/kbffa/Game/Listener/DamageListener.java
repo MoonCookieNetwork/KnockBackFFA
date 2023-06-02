@@ -1,7 +1,5 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
-import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
-import cn.mooncookie.kbffa.KnockBackFFA;
 import cn.mooncookie.kbffa.LPRankProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,6 +16,7 @@ public class DamageListener implements Listener {
     public void onDamage(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) return;
         Player player = (Player) e.getEntity();
+        Player killer = ((Player) e.getEntity()).getKiller();
 
         if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             e.setDamage(0);
@@ -33,7 +32,9 @@ public class DamageListener implements Listener {
         }
 
         if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-            if (((Player) e.getEntity()).getPlayer() == ((Player) e.getEntity()).getPlayer().getKiller()) return;
+            if (player == killer) {
+                e.setCancelled(true);
+            }
             e.setDamage(0);
             return;
         }
@@ -47,7 +48,7 @@ public class DamageListener implements Listener {
         Player killer = player.getKiller();
 
         if (killer != null && !player.equals(killer)) {
-            Bukkit.broadcastMessage(LPRankProvider.getPrefix(player) + player.getDisplayName() + " §7被击杀， 击杀者： " + LPRankProvider.getPrefix(killer) + killer.getDisplayName() + "§7。");
+            Bukkit.broadcastMessage(LPRankProvider.getPrefix(player) + player.getDisplayName() + " §f被击杀， 击杀者： " + LPRankProvider.getPrefix(killer) + killer.getDisplayName() + "§7。");
         }
     }
 
@@ -56,12 +57,6 @@ public class DamageListener implements Listener {
     public void onMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         Location location = player.getLocation();
-        Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> {
-            if (player.getLocation().getWorld().getName().equals("world")) {
-                MapChangeListener.currentMap.teleport(player);
-                player.sendMessage("§c检测到你是第一次进入击退战场， 已将你传送到当前地图。");
-            }
-        }, 10);
         if (location.getBlockY() <= 0.0) {
             player.closeInventory();
             PlayerDeathEvent deathEvent = new PlayerDeathEvent(player, null, 0, null);

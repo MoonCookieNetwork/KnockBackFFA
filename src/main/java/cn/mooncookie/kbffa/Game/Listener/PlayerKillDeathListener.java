@@ -2,6 +2,7 @@ package cn.mooncookie.kbffa.Game.Listener;
 
 import cn.mooncookie.kbffa.Game.GenShinImpact;
 import cn.mooncookie.kbffa.KnockBackFFA;
+import cn.mooncookie.kbffa.ScoreBoard.ScoreBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
@@ -51,6 +52,7 @@ public class PlayerKillDeathListener implements Listener {
             int pointsCount = points.getOrDefault(killer, 0) + 5;
             points.put(killer, pointsCount);
 
+            ScoreBoard.updateScoreboard(killer);
             killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
             killer.getInventory().addItem(GenShinImpact.EnderPearl());
             savePlayerData(killer);
@@ -68,12 +70,15 @@ public class PlayerKillDeathListener implements Listener {
             victim.setFoodLevel(20);
             victim.getInventory().clear();
             Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> GenShinImpact.giveItems(victim), 1);
+            Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> victim.spigot().respawn(), 1);
             victim.removePotionEffect(PotionEffectType.SPEED);
 
+            ScoreBoard.updateScoreboard(victim);
             int deathCount = deaths.getOrDefault(victim, 0) + 1;
             deaths.put(victim, deathCount);
+            int pointsCount = points.getOrDefault(killer, 0) - 5;
+            points.put(killer, pointsCount);
             savePlayerData(victim);
-            Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> victim.spigot().respawn(), 1);
         }
     }
 

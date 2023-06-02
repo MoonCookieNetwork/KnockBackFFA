@@ -31,12 +31,11 @@ public class ScoreBoard {
         List<PacketPlayOutScoreboardScore> scores = new ArrayList<>();
 
         scores.add(getScorePacket(scoreboard, objective, "   ", 10));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f击杀数：§a" + PlayerKillDeathListener.kills.get(player)), 9));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f死亡数：§c" + PlayerKillDeathListener.deaths.get(player)), 8));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f积分数：§6" + PlayerKillDeathListener.points.get(player)), 7));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f击杀数：§a" + PlayerKillDeathListener.kills.get(player)), 8));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f死亡数：§c" + PlayerKillDeathListener.deaths.get(player)), 7));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f积分数：§6" + PlayerKillDeathListener.points.get(player)), 6));
 
-        scores.add(getScorePacket(scoreboard, objective, ("  "), 6));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r切换地图：§a" + (MapChangeListener.countdown / 10)), 5));
+        scores.add(getScorePacket(scoreboard, objective, ("  "), 5));
         scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r当前地图：§a" + MapChangeListener.currentMap.getDisplayName()), 4));
         scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r在线人数：§a" + Bukkit.getOnlinePlayers().size()), 3));
         scores.add(getScorePacket(scoreboard, objective, (" "), 2));

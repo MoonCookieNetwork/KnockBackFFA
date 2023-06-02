@@ -91,7 +91,6 @@ public class ItemsListener implements Listener {
                 }.runTaskTimer(KnockBackFFA.getInstance(), 20L, 20L);
             } else {
                 e.setCancelled(true);
-                player.sendMessage("§c请等待冷却倒计时结束！");
             }
         }
     }
@@ -148,7 +147,6 @@ public class ItemsListener implements Listener {
             }.runTaskTimer(KnockBackFFA.getInstance(), 20L, 20L);
         } else {
             e.setCancelled(true);
-            player.sendMessage("§c请等待冷却倒计时结束！");
         }
     }
 
@@ -205,10 +203,10 @@ public class ItemsListener implements Listener {
                 }.runTaskTimer(KnockBackFFA.getInstance(), 20L, 20L);
             } else {
                 e.setCancelled(true);
-                player.sendMessage("§c请等待冷却倒计时结束！");
             }
             return;
         }
+
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getPlayer().getInventory().addItem(new ItemStack(e.getPlayer().getItemInHand().getType(), 1, (short) 0, e.getPlayer().getItemInHand().getData().getData())), 1);
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.REDSTONE_BLOCK), 3 * 20);
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.WOOL), 4 * 20);

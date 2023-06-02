@@ -1,6 +1,7 @@
 package cn.mooncookie.kbffa.Game.Maps;
 
 import cn.mooncookie.kbffa.Game.GenShinImpact;
+import cn.mooncookie.kbffa.ScoreBoard.ScoreBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -79,7 +80,7 @@ public class MapChangeListener implements Listener, CommandExecutor {
             if (countdown <= 0) {
                 changeMap();
             }
-        }, 0L,20L);
+        }, 0L, 20L);
     }
 
     private void changeMap() {
@@ -87,7 +88,8 @@ public class MapChangeListener implements Listener, CommandExecutor {
         saveCurrentMap();
         for (Player player : Bukkit.getOnlinePlayers()) {
             currentMap.teleport(player);
-            player.sendMessage("§a地图已切换至：" + MapChangeListener.currentMap.getDisplayName() + "。");
+            ScoreBoard.updateScoreboard(player);
+            player.sendMessage("§a地图已切换至" + MapChangeListener.currentMap.getDisplayName() + "。");
         }
         countdown = currentMap.getDuration();
     }
@@ -121,7 +123,8 @@ public class MapChangeListener implements Listener, CommandExecutor {
             saveCurrentMap();
             for (Player p : Bukkit.getOnlinePlayers()) {
                 currentMap.teleport(p);
-                p.sendMessage("§a地图已切换至：" + MapChangeListener.currentMap.getDisplayName() + "。");
+                p.sendMessage("§a地图已切换至" + MapChangeListener.currentMap.getDisplayName() + "。");
+                ScoreBoard.updateScoreboard(p);
                 countdown = currentMap.getDuration();
             }
         }
