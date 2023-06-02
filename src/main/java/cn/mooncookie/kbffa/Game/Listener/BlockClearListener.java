@@ -1,6 +1,7 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -14,23 +15,25 @@ import java.util.List;
 import java.util.Map;
 
 public class BlockClearListener implements Listener {
-    private final Map<String, List<Block>> playerBlocks = new HashMap<>();
+    private final Map<String, List<Location>> playerBlockLocations = new HashMap<>();
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlock();
+        Location location = block.getLocation();
 
-        if (!playerBlocks.containsKey(player.getName())) {
-            playerBlocks.put(player.getName(), new ArrayList<>());
+        if (!playerBlockLocations.containsKey(player.getName())) {
+            playerBlockLocations.put(player.getName(), new ArrayList<>());
         }
 
-        playerBlocks.get(player.getName()).add(block);
+        playerBlockLocations.get(player.getName()).add(location);
     }
 
     public void clearBlocks() {
-        for (List<Block> blocks : playerBlocks.values()) {
-            for (Block block : blocks) {
+        for (List<Location> locations : playerBlockLocations.values()) {
+            for (Location location : locations) {
+                Block block = location.getBlock();
                 block.setType(Material.AIR);
             }
         }

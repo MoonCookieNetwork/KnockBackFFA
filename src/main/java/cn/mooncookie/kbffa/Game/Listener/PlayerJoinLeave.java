@@ -25,10 +25,8 @@ public class PlayerJoinLeave implements Listener {
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> {
             if (player.getLocation().getWorld().getName().equals("world")) {
                 MapChangeListener.currentMap.teleport(player);
-                player.sendMessage("§c检测到你是第一次进入击退战场， 已将你传送到当前地图。");
             }
         }, 60);
-
         player.setGameMode(GameMode.SURVIVAL);
         player.setHealth(20);
         player.setFoodLevel(20);
