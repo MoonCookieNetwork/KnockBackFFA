@@ -77,7 +77,7 @@ public enum GenShinImpact {
         if (player.hasPermission("kbffa.admin")) {
             ItemStack flameStick = new ItemStack(Material.BLAZE_ROD, 1);
             ItemMeta flameStickMeta = flameStick.getItemMeta();
-            flameStickMeta.setDisplayName("§c§lKBFFA Crack");
+            flameStickMeta.setDisplayName("§c§lKBFFACrack");
             List<String> lore = new ArrayList<>();
             lore.add("§cCracked By YukiEnd");
             flameStickMeta.setLore(lore);

@@ -89,7 +89,7 @@ public class MapChangeListener implements Listener, CommandExecutor {
         for (Player player : Bukkit.getOnlinePlayers()) {
             currentMap.teleport(player);
             ScoreBoard.updateScoreboard(player);
-            player.sendMessage("§a地图已切换至" + MapChangeListener.currentMap.getDisplayName() + "。");
+            player.sendMessage("§a地图已切换至" + MapChangeListener.currentMap.getDisplayName() + "§a。");
         }
         countdown = currentMap.getDuration();
     }
@@ -123,7 +123,7 @@ public class MapChangeListener implements Listener, CommandExecutor {
             saveCurrentMap();
             for (Player p : Bukkit.getOnlinePlayers()) {
                 currentMap.teleport(p);
-                p.sendMessage("§a地图已切换至" + MapChangeListener.currentMap.getDisplayName() + "。");
+                p.sendMessage("§a地图已切换至" + MapChangeListener.currentMap.getDisplayName() + "§a。");
                 ScoreBoard.updateScoreboard(p);
                 countdown = currentMap.getDuration();
             }
