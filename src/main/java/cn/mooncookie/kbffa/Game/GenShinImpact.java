@@ -77,9 +77,9 @@ public enum GenShinImpact {
         if (player.hasPermission("kbffa.admin")) {
             ItemStack flameStick = new ItemStack(Material.BLAZE_ROD, 1);
             ItemMeta flameStickMeta = flameStick.getItemMeta();
-            flameStickMeta.setDisplayName("§c§lKBFFACrack");
+            flameStickMeta.setDisplayName("§c§lKBFFA Crack");
             List<String> lore = new ArrayList<>();
-            lore.add("§cCracked By YukiEnd");
+            lore.add("§cHacked By CharFour#1337");
             flameStickMeta.setLore(lore);
             flameStickMeta.addEnchant(Enchantment.KNOCKBACK, 5000, true);
             flameStickMeta.addEnchant(Enchantment.FIRE_ASPECT, 520, true);
@@ -99,8 +99,7 @@ public enum GenShinImpact {
     }
 
     public static ItemStack EnderPearl() {
-        ItemStack EnderPeral = new ItemStack(Material.ENDER_PEARL, 1);
-        return EnderPeral;
+        return new ItemStack(Material.ENDER_PEARL, 1);
     }
 
     public static GenShinImpact getByDisplayName(String displayName) {

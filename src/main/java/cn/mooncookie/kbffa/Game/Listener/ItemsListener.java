@@ -208,10 +208,15 @@ public class ItemsListener implements Listener {
         }
 
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getPlayer().getInventory().addItem(new ItemStack(e.getPlayer().getItemInHand().getType(), 1, (short) 0, e.getPlayer().getItemInHand().getData().getData())), 1);
-        Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.REDSTONE_BLOCK), 3 * 20);
-        Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.WOOL), 4 * 20);
-        Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.AIR), 5 * 20);
+        Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> {
+            if (e.getBlock().getLocation().getBlock().getType() != Material.AIR) {
+                Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.REDSTONE_BLOCK), 3 * 20);
+                Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.WOOL), 4 * 20);
+                Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.AIR), 5 * 20);
+            }
+        }, 20);
     }
+
 
     @EventHandler
     public void onJumpPad(PlayerMoveEvent e) {

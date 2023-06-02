@@ -48,7 +48,7 @@ public class DamageListener implements Listener {
         Player killer = player.getKiller();
 
         if (killer != null && !player.equals(killer)) {
-            Bukkit.broadcastMessage(LPRankProvider.getPrefix(player) + player.getDisplayName() + " §f被击杀， 击杀者： " + LPRankProvider.getPrefix(killer) + killer.getDisplayName() + "§7。");
+            Bukkit.broadcastMessage(LPRankProvider.getPrefix(player) + player.getDisplayName() + " §f被击杀， 击杀者： " + LPRankProvider.getPrefix(killer) + killer.getDisplayName() + "§f。");
         }
     }
 

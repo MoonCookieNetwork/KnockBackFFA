@@ -27,6 +27,7 @@ public class PlayerJoinLeave implements Listener {
                 MapChangeListener.currentMap.teleport(player);
             }
         }, 60);
+
         player.setGameMode(GameMode.SURVIVAL);
         player.setHealth(20);
         player.setFoodLevel(20);
