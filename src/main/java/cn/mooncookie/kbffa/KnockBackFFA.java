@@ -1,11 +1,9 @@
 package cn.mooncookie.kbffa;
 
-import cn.mooncookie.kbffa.BaseListener.BlockProtect;
-import cn.mooncookie.kbffa.BaseListener.ChatFormat;
-import cn.mooncookie.kbffa.BaseListener.NoMobSpawn;
-import cn.mooncookie.kbffa.BaseListener.StopWeatherChange;
+import cn.mooncookie.kbffa.BaseListener.*;
 import cn.mooncookie.kbffa.Game.Listener.*;
 import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
+import cn.mooncookie.kbffa.ScoreBoard.RefreshScoreBoard;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
@@ -35,7 +33,7 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         getLogger().info(ChatColor.GREEN + "插件已启用");
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
-        //new RefreshScoreBoard(this).runTaskTimer(this, 0, 20);
+        new RefreshScoreBoard(this).runTaskTimer(this, 0, 60 * 20);
 
         //Command
         getCommand("changemap").setExecutor(new MapChangeListener(this));

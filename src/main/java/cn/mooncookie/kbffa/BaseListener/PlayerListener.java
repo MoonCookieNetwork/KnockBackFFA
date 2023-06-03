@@ -1,4 +1,4 @@
-package cn.mooncookie.kbffa.Game.Listener;
+package cn.mooncookie.kbffa.BaseListener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

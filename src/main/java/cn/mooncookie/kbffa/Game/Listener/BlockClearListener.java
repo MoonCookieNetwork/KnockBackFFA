@@ -1,6 +1,7 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -22,6 +23,7 @@ public class BlockClearListener implements Listener {
         Player player = event.getPlayer();
         Block block = event.getBlock();
         Location location = block.getLocation();
+        if (player.getGameMode() == GameMode.CREATIVE) return;
 
         if (!playerBlockLocations.containsKey(player.getName())) {
             playerBlockLocations.put(player.getName(), new ArrayList<>());
