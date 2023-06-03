@@ -4,19 +4,11 @@ import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
 public class LoadingScoreBoard {
-
-    private static String getDate() {
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd §8HH:mm");
-        return format.format(date);
-    }
 
     public static void updateScoreboard(Player player) {
         Scoreboard scoreboard = new Scoreboard();
@@ -34,7 +26,7 @@ public class LoadingScoreBoard {
         scores.add(getScorePacket(scoreboard, objective, ("§c如长时间仍在加载， "), 4));
         scores.add(getScorePacket(scoreboard, objective, ("§c请尝试重新加入服务器。"), 3));
         scores.add(getScorePacket(scoreboard, objective, (" "), 2));
-        scores.add(getScorePacket(scoreboard, objective, ("§7#" + LoadingScoreBoard.getDate()), 1));
+        scores.add(getScorePacket(scoreboard, objective, ("§7#" + ScoreBoard.getDate()), 1));
         scores.add(getScorePacket(scoreboard, objective, ("§emc.mooncookie.top"), 0));
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(removeObjective);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(createObjective);

@@ -53,19 +53,19 @@ public class DamageListener implements Listener {
         Player player = event.getEntity();
         Player killer = player.getKiller();
 
-        player.spigot().respawn();
         player.setGameMode(GameMode.SURVIVAL);
         player.setHealth(20);
         player.setFoodLevel(20);
+        player.closeInventory();
         player.getInventory().clear();
         player.removePotionEffect(PotionEffectType.SPEED);
+        Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> GenShinImpact.giveItems(player), 1);
         player.teleport(player.getWorld().getSpawnLocation());
         ScoreBoard.updateScoreboard(player);
 
         if (killer != null && !player.equals(killer)) {
             killer.getInventory().addItem(GenShinImpact.EnderPearl());
             killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
-            Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> GenShinImpact.giveItems(killer), 1);
             ScoreBoard.updateScoreboard(killer);
             Bukkit.broadcastMessage(LPRankProvider.getPrefix(player) + player.getDisplayName() + " §f被击杀， 击杀者： " + LPRankProvider.getPrefix(killer) + killer.getDisplayName() + "§f。");
         }
@@ -77,7 +77,6 @@ public class DamageListener implements Listener {
         Player player = e.getPlayer();
         Location location = player.getLocation();
         if (location.getBlockY() <= 0.0) {
-            player.closeInventory();
             PlayerDeathEvent deathEvent = new PlayerDeathEvent(player, null, 0, null);
             Bukkit.getPluginManager().callEvent(deathEvent);
         }

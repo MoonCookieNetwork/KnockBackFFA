@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ScoreBoard {
 
-    private static String getDate() {
+    static String getDate() {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd §8HH:mm");
         return format.format(date);

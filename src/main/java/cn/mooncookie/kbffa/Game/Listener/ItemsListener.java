@@ -207,14 +207,14 @@ public class ItemsListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getPlayer().getInventory().addItem(new ItemStack(e.getPlayer().getItemInHand().getType(), 1, (short) 0, e.getPlayer().getItemInHand().getData().getData())), 1);
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> {
             if (e.getBlock().getLocation().getBlock().getType() != Material.AIR) {
-                Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.REDSTONE_BLOCK), 3 * 20);
-                Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.WOOL), 4 * 20);
+                Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getPlayer().getInventory().addItem(new ItemStack(e.getPlayer().getItemInHand().getType(), 1, (short) 0, e.getPlayer().getItemInHand().getData().getData())), 1);
                 Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.AIR), 5 * 20);
+                Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.REDSTONE_BLOCK), 4 * 20);
+                Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getBlock().setType(Material.STAINED_CLAY), 3 * 20);
             }
-        }, 20);
+        }, 5);
     }
 
 
