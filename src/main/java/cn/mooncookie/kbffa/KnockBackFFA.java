@@ -1,6 +1,10 @@
 package cn.mooncookie.kbffa;
 
-import cn.mooncookie.kbffa.BaseListener.*;
+import cn.mooncookie.kbffa.BaseListener.BlockProtect;
+import cn.mooncookie.kbffa.BaseListener.NoMobSpawn;
+import cn.mooncookie.kbffa.BaseListener.PlayerListener;
+import cn.mooncookie.kbffa.BaseListener.StopWeatherChange;
+import cn.mooncookie.kbffa.Game.ChatFormat;
 import cn.mooncookie.kbffa.Game.Listener.*;
 import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
 import cn.mooncookie.kbffa.ScoreBoard.RefreshScoreBoard;
@@ -29,7 +33,7 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
         PluginManager pluginManager = getServer().getPluginManager();
         Clearlistener = new BlockClearListener();
         playerDataFile = new File(getDataFolder(), "playerdata.yml");
-        PlayerKillDeathListener playerKillDeathListener = new PlayerKillDeathListener(playerDataFile);
+        StatsManager statsManager = new StatsManager(playerDataFile);
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
         getLogger().info(ChatColor.GREEN + "插件已启用");
         getLogger().info(ChatColor.LIGHT_PURPLE + "————————M0onCo0kie————————");
@@ -40,7 +44,7 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
 
         //Listener
         pluginManager.registerEvents(Clearlistener, this);
-        pluginManager.registerEvents(playerKillDeathListener, this);
+        pluginManager.registerEvents(statsManager, this);
         pluginManager.registerEvents(new BlockClearListener(), this);
         pluginManager.registerEvents(new MapChangeListener(this), this);
         pluginManager.registerEvents(new ChatFormat(), this);

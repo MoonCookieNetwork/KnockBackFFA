@@ -1,6 +1,5 @@
 package cn.mooncookie.kbffa.ScoreBoard;
 
-import cn.mooncookie.kbffa.Game.Listener.PlayerKillDeathListener;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -29,8 +28,8 @@ public class LoadingScoreBoard {
         List<PacketPlayOutScoreboardScore> scores = new ArrayList<>();
 
         scores.add(getScorePacket(scoreboard, objective, "   ", 8));
-        scores.add(getScorePacket(scoreboard, objective, ("§c正在加载你的档案" + PlayerKillDeathListener.kills.get(player)), 7));
-        scores.add(getScorePacket(scoreboard, objective, ("§c请稍等片刻..." + PlayerKillDeathListener.deaths.get(player)), 6));
+        scores.add(getScorePacket(scoreboard, objective, ("§c正在加载你的档案"), 7));
+        scores.add(getScorePacket(scoreboard, objective, ("§c请稍等片刻..."), 6));
         scores.add(getScorePacket(scoreboard, objective, ("  "), 5));
         scores.add(getScorePacket(scoreboard, objective, ("§c如长时间仍在加载， "), 4));
         scores.add(getScorePacket(scoreboard, objective, ("§c请尝试重新加入服务器。"), 3));

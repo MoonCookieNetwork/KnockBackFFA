@@ -1,6 +1,6 @@
-package cn.mooncookie.kbffa.BaseListener;
+package cn.mooncookie.kbffa.Game;
 
-import cn.mooncookie.kbffa.Game.Listener.PlayerKillDeathListener;
+import cn.mooncookie.kbffa.Game.Listener.StatsManager;
 import cn.mooncookie.kbffa.LPRankProvider;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +13,7 @@ public class ChatFormat implements Listener {
     public void onChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
         String name = p.getDisplayName();
-        String level = "§a[" + PlayerKillDeathListener.points.get(p) + "§a] ";
+        String level = "§a[" + StatsManager.points.get(p) + "§a] ";
         String prefix = LPRankProvider.getPrefix(p);
         String suffix = LPRankProvider.getSuffix(p);
         String msg;

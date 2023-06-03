@@ -24,10 +24,10 @@ public class PlayerJoinLeave implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         String name = player.getDisplayName();
+        e.setJoinMessage(null);
         String JoinFormat = LPRankProvider.getPrefix(e.getPlayer()) + name + LPRankProvider.getSuffix(e.getPlayer()) + "§6进入击退战场！";
         String NonPermissionJoinFormat = "§7[§a+§7] " + LPRankProvider.getPrefix(e.getPlayer()) + name + LPRankProvider.getSuffix(e.getPlayer());
 
-        player.sendMessage("§e正在加载数据...");
         player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 60, 1, false));
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, -100, false));
         player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 60, -100, false));
@@ -43,9 +43,9 @@ public class PlayerJoinLeave implements Listener {
             player.getActivePotionEffects().clear();
             ScoreBoard.updateScoreboard(player);
             if (player.hasPermission("moclobby.joinmessage")) {
-                e.setJoinMessage(JoinFormat);
+                Bukkit.broadcastMessage(JoinFormat);
             } else {
-                e.setJoinMessage(NonPermissionJoinFormat);
+                Bukkit.broadcastMessage(NonPermissionJoinFormat);
             }
         }, 60);
 
@@ -54,7 +54,6 @@ public class PlayerJoinLeave implements Listener {
                 MapChangeListener.currentMap.teleport(player);
             }
         }, 60);
-
     }
 
 

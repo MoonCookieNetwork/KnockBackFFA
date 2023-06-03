@@ -1,6 +1,6 @@
 package cn.mooncookie.kbffa.ScoreBoard;
 
-import cn.mooncookie.kbffa.Game.Listener.PlayerKillDeathListener;
+import cn.mooncookie.kbffa.Game.Listener.StatsManager;
 import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
@@ -31,9 +31,9 @@ public class ScoreBoard {
         List<PacketPlayOutScoreboardScore> scores = new ArrayList<>();
 
         scores.add(getScorePacket(scoreboard, objective, "   ", 10));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f击杀数：§a" + PlayerKillDeathListener.kills.get(player)), 8));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f死亡数：§c" + PlayerKillDeathListener.deaths.get(player)), 7));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f积分数：§6" + PlayerKillDeathListener.points.get(player)), 6));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f击杀数：§a" + StatsManager.kills.get(player)), 8));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f死亡数：§c" + StatsManager.deaths.get(player)), 7));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f积分数：§6" + StatsManager.points.get(player)), 6));
 
         scores.add(getScorePacket(scoreboard, objective, ("  "), 5));
         scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r当前地图：§a" + MapChangeListener.currentMap.getDisplayName()), 4));

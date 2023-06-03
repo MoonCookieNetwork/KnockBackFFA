@@ -1,14 +1,20 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
+import cn.mooncookie.kbffa.Game.GenShinImpact;
+import cn.mooncookie.kbffa.KnockBackFFA;
 import cn.mooncookie.kbffa.LPRankProvider;
+import cn.mooncookie.kbffa.ScoreBoard.ScoreBoard;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffectType;
 
 public class DamageListener implements Listener {
 
@@ -27,7 +33,6 @@ public class DamageListener implements Listener {
             player.closeInventory();
             PlayerDeathEvent deathEvent = new PlayerDeathEvent(player, null, 0, null);
             Bukkit.getPluginManager().callEvent(deathEvent);
-            player.teleport(player.getWorld().getSpawnLocation());
             return;
         }
 
@@ -42,17 +47,31 @@ public class DamageListener implements Listener {
         e.setCancelled(true);
     }
 
+    
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         Player killer = player.getKiller();
 
+        player.spigot().respawn();
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setHealth(20);
+        player.setFoodLevel(20);
+        player.getInventory().clear();
+        player.removePotionEffect(PotionEffectType.SPEED);
+        player.teleport(player.getWorld().getSpawnLocation());
+        ScoreBoard.updateScoreboard(player);
+
         if (killer != null && !player.equals(killer)) {
+            killer.getInventory().addItem(GenShinImpact.EnderPearl());
+            killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
+            Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> GenShinImpact.giveItems(killer), 1);
+            ScoreBoard.updateScoreboard(killer);
             Bukkit.broadcastMessage(LPRankProvider.getPrefix(player) + player.getDisplayName() + " §f被击杀， 击杀者： " + LPRankProvider.getPrefix(killer) + killer.getDisplayName() + "§f。");
         }
     }
 
-    //FastDie
+    //FastDie 负责死亡就行
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
@@ -61,7 +80,6 @@ public class DamageListener implements Listener {
             player.closeInventory();
             PlayerDeathEvent deathEvent = new PlayerDeathEvent(player, null, 0, null);
             Bukkit.getPluginManager().callEvent(deathEvent);
-            player.teleport(player.getWorld().getSpawnLocation());
         }
     }
 }

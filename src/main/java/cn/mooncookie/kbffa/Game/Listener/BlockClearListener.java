@@ -28,7 +28,6 @@ public class BlockClearListener implements Listener {
         if (!playerBlockLocations.containsKey(player.getName())) {
             playerBlockLocations.put(player.getName(), new ArrayList<>());
         }
-
         playerBlockLocations.get(player.getName()).add(location);
     }
 
