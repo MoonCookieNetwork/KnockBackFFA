@@ -47,7 +47,7 @@ public class DamageListener implements Listener {
         e.setCancelled(true);
     }
 
-    
+
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
