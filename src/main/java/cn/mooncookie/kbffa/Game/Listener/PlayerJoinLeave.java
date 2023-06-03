@@ -20,7 +20,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public class PlayerJoinLeave implements Listener {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         String name = player.getDisplayName();
@@ -55,8 +55,7 @@ public class PlayerJoinLeave implements Listener {
             }
         }, 60);
     }
-
-
+    
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
