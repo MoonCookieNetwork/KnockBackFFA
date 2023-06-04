@@ -55,8 +55,8 @@ public class StatsManager implements Listener {
         if (event.getEntity() != null) {
             int deathCount = deaths.getOrDefault(victim, 0) + 1;
             deaths.put(victim, deathCount);
-            int pointsCount = points.getOrDefault(killer, 0) - 5;
-            points.put(killer, pointsCount);
+            int pointsCount = points.getOrDefault(victim, 0) - 5;
+            points.put(victim, pointsCount);
         } // 被击杀者
     }
 
