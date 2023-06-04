@@ -206,9 +206,6 @@ public class ItemsListener implements Listener {
             }
             return;
         }
-        if (e.getBlock().getLocation().getBlockY() >= 110) {
-            e.setCancelled(true);
-        }
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> {
             if (e.getBlock().getLocation().getBlock().getType() != Material.AIR) {
                 Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> e.getPlayer().getInventory().addItem(new ItemStack(e.getPlayer().getItemInHand().getType(), 1, (short) 0, e.getPlayer().getItemInHand().getData().getData())), 1);
