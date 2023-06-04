@@ -1,5 +1,6 @@
 package cn.mooncookie.kbffa.Game.Listener;
 
+import cn.mooncookie.kbffa.ScoreBoard.ScoreBoard;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,12 +52,14 @@ public class StatsManager implements Listener {
             kills.put(killer, killCount);
             int pointsCount = points.getOrDefault(killer, 0) + 5;
             points.put(killer, pointsCount);
+            ScoreBoard.updateScoreboard(killer);
         } // 击杀者
         if (event.getEntity() != null) {
             int deathCount = deaths.getOrDefault(victim, 0) + 1;
             deaths.put(victim, deathCount);
             int pointsCount = points.getOrDefault(victim, 0) - 5;
             points.put(victim, pointsCount);
+            ScoreBoard.updateScoreboard(victim);
         } // 被击杀者
     }
 

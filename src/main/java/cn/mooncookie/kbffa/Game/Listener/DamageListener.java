@@ -3,7 +3,6 @@ package cn.mooncookie.kbffa.Game.Listener;
 import cn.mooncookie.kbffa.Game.GenShinImpact;
 import cn.mooncookie.kbffa.KnockBackFFA;
 import cn.mooncookie.kbffa.LPRankProvider;
-import cn.mooncookie.kbffa.ScoreBoard.ScoreBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -61,12 +60,10 @@ public class DamageListener implements Listener {
         player.removePotionEffect(PotionEffectType.SPEED);
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> GenShinImpact.giveItems(player), 1);
         player.teleport(player.getWorld().getSpawnLocation());
-        ScoreBoard.updateScoreboard(player);
 
         if (killer != null && !player.equals(killer)) {
             killer.getInventory().addItem(GenShinImpact.EnderPearl());
             killer.playSound(killer.getLocation(), Sound.ORB_PICKUP, 1, 1);
-            ScoreBoard.updateScoreboard(killer);
             Bukkit.broadcastMessage(LPRankProvider.getPrefix(player) + player.getDisplayName() + " §f被击杀， 击杀者： " + LPRankProvider.getPrefix(killer) + killer.getDisplayName() + "§f。");
         }
     }

@@ -14,8 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -95,20 +93,6 @@ public class MapChangeListener implements Listener, CommandExecutor {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        currentMap.teleport(player);
-        GenShinImpact.giveItems(player);
-    }
-
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        currentMap.teleport(player);
-        GenShinImpact.giveItems(player);
-    }
-
-    @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!event.getView().getTitle().equals("§8更换地图")) {
             return;
@@ -131,7 +115,7 @@ public class MapChangeListener implements Listener, CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!sender.hasPermission("KBFFA.Command.ChangeMap")) {
+        if (!sender.hasPermission("KBFFA.ChangeMap")) {
             sender.sendMessage("§c你没有使用此命令的权限！");
             return true;
         }

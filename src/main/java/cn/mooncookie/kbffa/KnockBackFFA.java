@@ -7,6 +7,7 @@ import cn.mooncookie.kbffa.BaseListener.StopWeatherChange;
 import cn.mooncookie.kbffa.Game.ChatFormat;
 import cn.mooncookie.kbffa.Game.Listener.*;
 import cn.mooncookie.kbffa.Game.Maps.MapChangeListener;
+import cn.mooncookie.kbffa.Game.Maps.MapLoader;
 import cn.mooncookie.kbffa.ScoreBoard.RefreshScoreBoard;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -31,6 +32,7 @@ public class KnockBackFFA extends JavaPlugin implements Listener {
     public void onEnable() {
         instance = this;
         PluginManager pluginManager = getServer().getPluginManager();
+        MapLoader.mapLoader();
         Clearlistener = new BlockClearListener();
         playerDataFile = new File(getDataFolder(), "playerdata.yml");
         StatsManager statsManager = new StatsManager(playerDataFile);
