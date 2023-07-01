@@ -1,6 +1,8 @@
 package cn.mooncookie.kbffa.Game.Maps;
 
 import cn.mooncookie.kbffa.Game.GenShinImpact;
+import cn.mooncookie.kbffa.Game.Listener.BlockClearListener;
+import cn.mooncookie.kbffa.KnockBackFFA;
 import cn.mooncookie.kbffa.ScoreBoard.ScoreBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,6 +15,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +39,6 @@ public class MapChangeListener implements Listener, CommandExecutor {
     public MapChangeListener(JavaPlugin plugin) {
         this.plugin = plugin;
         Bukkit.getScheduler().runTaskLater(plugin, this::init, 20);
-
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -87,6 +89,7 @@ public class MapChangeListener implements Listener, CommandExecutor {
         for (Player player : Bukkit.getOnlinePlayers()) {
             currentMap.teleport(player);
             ScoreBoard.updateScoreboard(player);
+            KnockBackFFA.Clearlistener.clearBlocks();
             player.sendMessage("§a地图已切换至" + MapChangeListener.currentMap.getDisplayName() + "§a。");
         }
         countdown = currentMap.getDuration();
@@ -108,6 +111,7 @@ public class MapChangeListener implements Listener, CommandExecutor {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 currentMap.teleport(p);
                 p.sendMessage("§a地图已切换至" + MapChangeListener.currentMap.getDisplayName() + "§a。");
+                KnockBackFFA.Clearlistener.clearBlocks();
                 ScoreBoard.updateScoreboard(p);
                 countdown = currentMap.getDuration();
             }

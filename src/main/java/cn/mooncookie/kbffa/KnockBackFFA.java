@@ -22,11 +22,12 @@ import java.io.File;
 public class KnockBackFFA extends JavaPlugin implements Listener {
     public static File playerDataFile;
     private static KnockBackFFA instance;
-    private BlockClearListener Clearlistener;
+    public static BlockClearListener Clearlistener;
 
     public static KnockBackFFA getInstance() {
         return instance;
     }
+
 
     @Override
     public void onEnable() {

@@ -7,7 +7,6 @@ import org.bukkit.WorldCreator;
 import static org.bukkit.Bukkit.getServer;
 
 public class MapLoader {
-
     public static void mapLoader() {
         getServer().createWorld(new WorldCreator("Shield"));
         Bukkit.getWorld("Shield").setDifficulty(Difficulty.PEACEFUL);
@@ -20,12 +19,6 @@ public class MapLoader {
         Bukkit.getWorld("Garden").setTime(6000);
         Bukkit.getWorld("Garden").setGameRuleValue("doDaylightCycle", "false");
         Bukkit.getWorld("Garden").setGameRuleValue("doMobSpawning", "false");
-
-        getServer().createWorld(new WorldCreator("RedDeath"));
-        Bukkit.getWorld("RedDeath").setDifficulty(Difficulty.PEACEFUL);
-        Bukkit.getWorld("RedDeath").setTime(6000);
-        Bukkit.getWorld("RedDeath").setGameRuleValue("doDaylightCycle", "false");
-        Bukkit.getWorld("RedDeath").setGameRuleValue("doMobSpawning", "false");
 
         getServer().createWorld(new WorldCreator("Desert"));
         Bukkit.getWorld("Desert").setDifficulty(Difficulty.PEACEFUL);
@@ -68,12 +61,6 @@ public class MapLoader {
         Bukkit.getWorld("Prismarine").setTime(6000);
         Bukkit.getWorld("Prismarine").setGameRuleValue("doDaylightCycle", "false");
         Bukkit.getWorld("Prismarine").setGameRuleValue("doMobSpawning", "false");
-
-        getServer().createWorld(new WorldCreator("Beach"));
-        Bukkit.getWorld("Beach").setDifficulty(Difficulty.PEACEFUL);
-        Bukkit.getWorld("Beach").setTime(6000);
-        Bukkit.getWorld("Beach").setGameRuleValue("doDaylightCycle", "false");
-        Bukkit.getWorld("Beach").setGameRuleValue("doMobSpawning", "false");
 
         getServer().createWorld(new WorldCreator("Clay"));
         Bukkit.getWorld("Clay").setDifficulty(Difficulty.PEACEFUL);

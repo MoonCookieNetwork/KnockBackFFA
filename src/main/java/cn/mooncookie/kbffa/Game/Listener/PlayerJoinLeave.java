@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -20,10 +21,14 @@ import org.bukkit.potion.PotionEffectType;
 
 public class PlayerJoinLeave implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         e.setJoinMessage(null);
+        player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+        player.setHealth(20);
+        player.setFoodLevel(20);
+        player.getInventory().clear();
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 60, 1, false));
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, -100, false));
@@ -34,8 +39,10 @@ public class PlayerJoinLeave implements Listener {
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> {
             if (player.getLocation().getWorld().getName().equals("world")) {
                 MapChangeListener.currentMap.teleport(player);
+                addPlayer(player);
+            } else {
+                addPlayer(player);
             }
-            addPlayer(player);
         }, 60);
 
     }
@@ -56,9 +63,6 @@ public class PlayerJoinLeave implements Listener {
         String NonPermissionJoinFormat = "§7[§a+§7] " + LPRankProvider.getPrefix(player) + name + LPRankProvider.getSuffix(player);
 
         player.setGameMode(GameMode.SURVIVAL);
-        player.setHealth(20);
-        player.setFoodLevel(20);
-        player.getInventory().clear();
         Bukkit.getScheduler().runTaskLater(KnockBackFFA.getInstance(), () -> GenShinImpact.giveItems(player), 1);
         player.getActivePotionEffects().clear();
         ScoreBoard.updateScoreboard(player);

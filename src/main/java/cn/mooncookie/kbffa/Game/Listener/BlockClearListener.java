@@ -36,6 +36,7 @@ public class BlockClearListener implements Listener {
             for (Location location : locations) {
                 Block block = location.getBlock();
                 block.setType(Material.AIR);
+                playerBlockLocations.clear();
             }
         }
     }

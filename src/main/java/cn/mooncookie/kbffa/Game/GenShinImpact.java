@@ -13,21 +13,18 @@ import java.util.List;
 
 public enum GenShinImpact {
 
-    SHIELD("Shield", "§1蒙德", 9000),
-    GARDEN("Garden", "§2须弥城", 9000),
-    RED_DEATH("RedDeath", "§6层岩巨渊", 9000),
-    DESERT("Desert", "§e列柱沙原", 9000),
-    WOODS("Woods", "§a道成林", 9000),
-    LIME("Lime", "§d鸣神岛", 9000),
-    NETHER("Nether", "§d清赖岛", 9000),
-    COLORS("Colors", "§f阿陀河谷", 9000),
-    PRISMARINE("Prismarine", "§9神无冢", 9000),
-    BEACH("Beach", "§b鹤观", 9000),
-    CLAY("Clay", "§3荒石苍漠", 9000),
-    SANIC("Sanic", "§8神秘绿洲", 9000),
-    SAVANNA("Savanna", "§7草原", 9000),
-    CHESS("Chess", "§6皇宫殿堂", 9000);
-
+    SHIELD("Shield", "§1蒙德", 3000),
+    GARDEN("Garden", "§2须弥城", 3000),
+    DESERT("Desert", "§e列柱沙原", 3000),
+    WOODS("Woods", "§a道成林", 3000),
+    LIME("Lime", "§d鸣神岛", 3000),
+    NETHER("Nether", "§d清赖岛", 3000),
+    COLORS("Colors", "§f阿陀河谷", 3000),
+    PRISMARINE("Prismarine", "§9神无冢", 3000),
+    CLAY("Clay", "§3荒石苍漠", 3000),
+    SANIC("Sanic", "§8神秘绿洲", 3000),
+    SAVANNA("Savanna", "§7草原", 3000),
+    CHESS("Chess", "§6皇宫殿堂", 3000);
 
     private final String name;
     private final String displayName;

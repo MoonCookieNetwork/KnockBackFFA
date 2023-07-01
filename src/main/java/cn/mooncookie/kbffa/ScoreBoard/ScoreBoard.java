@@ -17,7 +17,7 @@ public class ScoreBoard {
 
     static String getDate() {
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd §8HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy §8HH:mm");
         return format.format(date);
     }
 
@@ -30,16 +30,16 @@ public class ScoreBoard {
         PacketPlayOutScoreboardDisplayObjective displayObjective = new PacketPlayOutScoreboardDisplayObjective(1, objective);
         List<PacketPlayOutScoreboardScore> scores = new ArrayList<>();
 
-        scores.add(getScorePacket(scoreboard, objective, "   ", 10));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f击杀数：§a" + StatsManager.kills.get(player)), 8));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f死亡数：§c" + StatsManager.deaths.get(player)), 7));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f积分数：§6" + StatsManager.points.get(player)), 6));
+        scores.add(getScorePacket(scoreboard, objective, ("§7" + ScoreBoard.getDate()), 9));
+        scores.add(getScorePacket(scoreboard, objective, "   ", 8));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f击杀数：§a" + StatsManager.kills.get(player)), 7));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f死亡数：§c" + StatsManager.deaths.get(player)), 6));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❖ §f积分数：§6" + StatsManager.points.get(player)), 5));
 
-        scores.add(getScorePacket(scoreboard, objective, ("  "), 5));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r当前地图：§a" + MapChangeListener.currentMap.getDisplayName()), 4));
-        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r在线人数：§a" + Bukkit.getOnlinePlayers().size()), 3));
-        scores.add(getScorePacket(scoreboard, objective, (" "), 2));
-        scores.add(getScorePacket(scoreboard, objective, ("§7#" + ScoreBoard.getDate()), 1));
+        scores.add(getScorePacket(scoreboard, objective, ("  "), 4));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r当前地图：§a" + MapChangeListener.currentMap.getDisplayName()), 3));
+        scores.add(getScorePacket(scoreboard, objective, ("§8❒ §r在线人数：§a" + Bukkit.getOnlinePlayers().size()), 2));
+        scores.add(getScorePacket(scoreboard, objective, (" "), 1));
         scores.add(getScorePacket(scoreboard, objective, ("§emc.mooncookie.top"), 0));
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(removeObjective);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(createObjective);

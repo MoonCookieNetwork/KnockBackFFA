@@ -19,14 +19,14 @@ public class LoadingScoreBoard {
         PacketPlayOutScoreboardDisplayObjective displayObjective = new PacketPlayOutScoreboardDisplayObjective(1, objective);
         List<PacketPlayOutScoreboardScore> scores = new ArrayList<>();
 
-        scores.add(getScorePacket(scoreboard, objective, "   ", 8));
-        scores.add(getScorePacket(scoreboard, objective, ("§c正在加载你的档案"), 7));
-        scores.add(getScorePacket(scoreboard, objective, ("§c请稍等片刻..."), 6));
-        scores.add(getScorePacket(scoreboard, objective, ("  "), 5));
-        scores.add(getScorePacket(scoreboard, objective, ("§c如长时间仍在加载， "), 4));
-        scores.add(getScorePacket(scoreboard, objective, ("§c请尝试重新加入服务器。"), 3));
-        scores.add(getScorePacket(scoreboard, objective, (" "), 2));
-        scores.add(getScorePacket(scoreboard, objective, ("§7#" + ScoreBoard.getDate()), 1));
+        scores.add(getScorePacket(scoreboard, objective, ("§7" + ScoreBoard.getDate()), 8));
+        scores.add(getScorePacket(scoreboard, objective, "   ", 7));
+        scores.add(getScorePacket(scoreboard, objective, ("§c正在加载你的档案"), 6));
+        scores.add(getScorePacket(scoreboard, objective, ("§c请稍等片刻..."), 5));
+        scores.add(getScorePacket(scoreboard, objective, ("  "), 4));
+        scores.add(getScorePacket(scoreboard, objective, ("§c如长时间仍在加载， "), 3));
+        scores.add(getScorePacket(scoreboard, objective, ("§c请尝试重新加入服务器。"), 2));
+        scores.add(getScorePacket(scoreboard, objective, (" "), 1));
         scores.add(getScorePacket(scoreboard, objective, ("§emc.mooncookie.top"), 0));
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(removeObjective);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(createObjective);
